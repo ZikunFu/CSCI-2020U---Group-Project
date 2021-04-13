@@ -11,63 +11,48 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import java.io.*;
-import java.net.*;
-import java.awt.*;
-
+import javafx.scene.canvas.Canvas;
 import javafx.util.Duration;
-import org.w3c.dom.*;
-import java.io.File;
-import javafx.scene.text.Text;
+import javafx.scene.control.Label;
+
 
 public class Main extends Application {
     private Canvas canvas;
-    private Socket socket = null;
-    private BufferedReader in = null;
-    private PrintWriter networkOut = null;
-    private BufferedReader networkIn = null;
-
-    ListView<String> list;
-    public  static String SERVER_ADDRESS = "localhost";
-    public  static int    SERVER_PORT = 16789;
+    //private double screenWidth = 100;
+    //private double screenHeight = 600;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        //socket
+        try {
+            socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        } catch (UnknownHostException e) {
+            System.err.println("Unknown host: "+SERVER_ADDRESS);
+        } catch (IOException e) {
+            System.err.println("IOEXception while connecting to server: "+SERVER_ADDRESS);
+        }
+        if (socket == null) {
+            System.err.println("socket is null");
+        }
+        try {
+            networkOut = new PrintWriter(socket.getOutputStream(), true);
+            networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            System.err.println("IOEXception while opening a read/write connection");
+        }
 
-        //Thread for establishing server connection
-        new Thread(()-> {
-            while (true) {
-                try {
-                    socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-                    if (socket != null) {
-                        networkOut = new PrintWriter(socket.getOutputStream(), true);
-                        networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        break;
-                    }
-                    System.out.println("trying to connect...");
-                } catch (UnknownHostException e) {
-                    System.err.println("Unknown host: "+SERVER_ADDRESS);
-                } catch (IOException e) {
-                    System.err.println("IOEXception while connecting to server: "+SERVER_ADDRESS);
-                }
-
-            } }).start();
-
-        //UI
-
-        primaryStage.setTitle("VS Game");
+        //login
+        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        primaryStage.setTitle("Game");
 
         GridPane myGrid = new GridPane();
         myGrid.setAlignment(Pos.CENTER);
@@ -93,171 +78,186 @@ public class Main extends Application {
         myGrid.add(register, 1, 5);
 
         myGrid.add(label, 1, 6);
-        label.setText("");
 
-        //right half
-        Group root1 = new Group();
+        //LOGO
+        Group root = new Group();
+        Scene scene = new Scene(root, 780, 450);
 
-        //Scene scene = new Scene(root1, 300, 500);
-
+        //        Create Canvas object and add it into the scene
         canvas = new Canvas();
         canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.heightProperty().bind(primaryStage.heightProperty());
-        root1.getChildren().add(canvas);
+        root.getChildren().addAll(myGrid, canvas);
 
-        //Group root2 = new Group();
-        //canvas = new Canvas();
-        //canvas.widthProperty().bind(primaryStage.widthProperty());
-        //canvas.heightProperty().bind(primaryStage.heightProperty());
-        //root2.getChildren().add(canvas);
-
-        /*
-        VBox right = new VBox(30);
-        right.getChildren().add(root1);
-
-        VBox vb = new VBox(30);
-        vb.getChildren().addAll(myGrid, right);
-         */
-        //vb.setAlignment(Pos.CENTER);
-
-        //Hhox
-        /*
-        VBox vb1 = new VBox(30);
-        vb1.getChildren().addAll(myGrid, vb);
-        vb1.setSpacing(10);
-         */
-        //vb1.setAlignment(Pos.CENTER);
-
-
-        //show
-        Scene scene = new Scene(myGrid, 500, 500);
-
+        primaryStage.setTitle("Graphics - Hello World");
         primaryStage.setScene(scene);
         primaryStage.show();
-        //TODO: Animation and logo
-        //draw(root1);
-        //drawAnimation(root2);
+
+//        drawing graphics - shapes and image
+        draw(root);
+
+//        draw an animation
+        drawAnimation(root);
 
 
+        //Login
         login.setOnAction(actionEvent -> {
 
             String message = null;
-        //TODO: note that there are spaces between command and arguments
-            networkOut.println("Login " + tf1.getText() + " " + tf2.getText());
+
+            networkOut.println("Login" + tf1.getText() + tf2.getText());
             try {
                 message = networkIn.readLine();
-                System.out.println(message);
             } catch (IOException e) {
                 System.err.println("Error reading response to login.");
             }
-        //TODO: note that comparing strings should use the .equals method
-            if(message.equals("correct")){
+
+            if(message == "correct"){
                 label.setText("Login Successfully");
             }
-            else if(message.equals("invalidAccount")){
-                label.setText("Cannot find this account");
+            else if(message == "invalidAccount"){
+                label.setText("Invalid Account");
             }
-            else if(message.equals("invalidPassword")){
-                label.setText("Password incorrect");
+            else if(message == "invalidPassword"){
+                label.setText("Invalid Password");
             }
-            //TODO: goto scene 2
         });
 
+        //Register
         register.setOnAction(actionEvent -> {
 
             String message = null;
-        //TODO: note that there are spaces between command and arguments
-            networkOut.println("Register " + tf1.getText() + " " + tf2.getText());
+
+            networkOut.println("Register" + tf1.getText() + tf2.getText());
             try {
                 message = networkIn.readLine();
             } catch (IOException e) {
                 System.err.println("Error reading response to Register.");
             }
-        //TODO: note that comparing strings should use the .equals method
-            if(message.equals("invalidAccount")){
-                label.setText("Account already exists");
+
+            if(message == "invalidAccount"){
+                label.setText("Invalid Account");
             }
-            else if(message.equals("correct")){
+            else if(message == "correct"){
                 label.setText("Register Successfully");
             }
 
         });
     }
 
-    private void draw(Group root) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-
-//        Drawing 3 lines(Y)
-        gc.setStroke(javafx.scene.paint.Color.RED);
-        gc.strokeLine(100,100,60,60);
-
-        gc.setStroke(javafx.scene.paint.Color.GREEN);
-        gc.strokeLine(100,100,140,60);
-
-        gc.setStroke(javafx.scene.paint.Color.BLUE);
-        gc.strokeLine(100,100,100,170);
-
-//        Drawing 3 lines(Y)
-        gc.setStroke(javafx.scene.paint.Color.RED);
-        gc.strokeLine(200,100,160,60);
-
-        gc.setStroke(javafx.scene.paint.Color.GREEN);
-        gc.strokeLine(200,100,240,60);
-
-        gc.setStroke(Color.BLUE);
-        gc.strokeLine(200,100,200,170);
-    }
-
-    private int frameWidth = 32;
-    private int frameHeight = 36;
-    private int numFrameswidth = 3;
-    private int numFramesheight = 8;
+    private int frameWidth = 480;
+    private int frameHeight = 310;
+    private int numFrames = 3;
     private int sourceHeightOffset = 0;
     private int sourceWidthOffset = 0;
-    private int frameIndexwidth = 0;
-    //    private int frameIndexheight = 0;
-    private int widthIndex = 0;
-    private int heightIndex = 0;
+    private int frameIndex = 0;
+
 
     private void drawAnimation(Group root) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 //loading image sprite using relative path
-        Image image = new Image(getClass().getClassLoader().getResource("ducks.png").toString());
+        Image image = new Image(getClass().getClassLoader().getResource("images/bruce.jpg").toString());
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1333.3333), new EventHandler<ActionEvent>(){
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(288), new EventHandler<ActionEvent>(){
 
             @Override
             public void handle(ActionEvent actionEvent) {
 //                background rect fpr the characters
-                gc.setFill(Color.BLACK);
-                gc.fillRect(50, 50, frameWidth, frameHeight);
 
+                gc.drawImage(image, sourceWidthOffset, sourceHeightOffset, frameWidth, frameHeight, 300, 170, frameWidth, frameHeight);
 
-                widthIndex = 9 + frameIndexwidth;
+//                we want to vary frameIndex from 0 to numFrames (not included) using the %
+                frameIndex = (frameIndex+1) % numFrames;
+
 //                calculating the offset height based on the frameIndex
-                sourceWidthOffset = frameWidth*widthIndex;
-
-                gc.drawImage(image, sourceWidthOffset, sourceHeightOffset, frameWidth, frameHeight, 50, 50, frameWidth, frameHeight);
-//                we want to vary frameIndex from 9 to 11 (not included) using the %
-                frameIndexwidth = (frameIndexwidth+1) % numFrameswidth;
-//                we want to vary frameIndex from 0 to 2 (not included) using the %
-                if(frameIndexwidth == 0){
-                    heightIndex = (heightIndex + 1) % numFramesheight;
-                }
-//                calculating the offset height based on the frameIndex
-                sourceHeightOffset = frameHeight*heightIndex;
+                sourceHeightOffset = frameHeight*frameIndex;
 
             }
         }));
 
 //      Starting the timeline
         timeline.playFromStart();
+    }
 
+    private void draw(Group root) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
+//        C
+        gc.setStroke(Color.RED);
+        gc.strokeLine(320,20,350,30);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(320,20,310,60);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(310,60,350,60);
+
+        //R
+        gc.setStroke(Color.RED);
+        gc.strokeArc(330, 20, 50, 90, 45, 45, ArcType.ROUND);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(365,50,375,65);
+
+        //A
+        gc.setStroke(Color.RED);
+        gc.strokeLine(400,20,380,60);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(400,20,420,60);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(390,40,410,40);
+
+        //Z
+        gc.setStroke(Color.RED);
+        gc.strokeLine(425,20,450,20);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(425,60,450,60);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(450,20,425,60);
+
+        //Y
+        gc.setStroke(Color.RED);
+        gc.strokeLine(455,20,465,40);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(475,20,455,60);
+
+        //F
+        gc.setStroke(Color.RED);
+        gc.strokeLine(310,80,350,70);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(315,80,310,120);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(320,100,340,95);
+
+        //I
+        gc.setStroke(Color.RED);
+        gc.strokeLine(360,80,355,120);
+
+        //G
+        gc.setStroke(Color.ORANGE);
+        gc.strokeArc(380, 80, 50, 45, 80, 180, ArcType.ROUND);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(390,100,405,100);
+
+        //H
+        gc.setStroke(Color.RED);
+        gc.strokeLine(420,80,415,120);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(420,100,440,100);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(445,80,440,120);
+
+        //T
+        gc.setStroke(Color.RED);
+        gc.strokeLine(452,80,475,80);
+        gc.setStroke(Color.RED);
+        gc.strokeLine(463,80,458,120);
+
+        //Line
+        gc.setFill(Color.DEEPPINK);
+        gc.fillPolygon(new double[] {300, 480, 350}, new double[] {150, 150, 140}, 3);
 
     }
+
 
     public static void main(String[] args) {
         launch(args);
