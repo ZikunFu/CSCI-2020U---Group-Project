@@ -1,9 +1,6 @@
 package sample;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 /**
@@ -106,4 +103,63 @@ public class fileManager {
         return temp;
     }
 
+    public void createProfile(File file) throws IOException {
+        FileWriter csvWriter = new FileWriter(file);
+        csvWriter.append("username");
+        csvWriter.append(",");
+        csvWriter.append("password");
+        csvWriter.append(",");
+        csvWriter.append("hp");
+        csvWriter.append(",");
+        csvWriter.append("attack");
+        csvWriter.append(",");
+        csvWriter.append("defence");
+        csvWriter.append(",");
+        csvWriter.append("rank");
+        csvWriter.append(",");
+        csvWriter.append("item");
+        csvWriter.append("\n");
+        csvWriter.flush();
+        csvWriter.close();
+    }
+
+    //data will be <apple banana candy>
+    public void appendCSV(File path, String data) throws IOException {
+        FileWriter csvWriter = new FileWriter(path,true);
+        csvWriter.append(data);
+        csvWriter.append("\n");
+        csvWriter.flush();
+        csvWriter.close();
+
+    }
+
+    //search for target String in specific column of CSV
+    public boolean matchCSV(File path, String target, int column) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(path));
+        String nextLine;
+        boolean found = false;
+        while ((nextLine = br.readLine())!=null){
+            String[] col = nextLine.split(",");
+            String str = col[column];
+            if(str==target){
+                found = true;
+            }
+        }
+        br.close();
+        return found;
+    }
+    public String searchCSV(File path, String target, int column) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(path));
+        String nextLine;
+        String targetLine="";
+        while ((nextLine = br.readLine())!=null){
+            String[] col = nextLine.split(",");
+            String str = col[column];
+            if(str==target){
+                targetLine=nextLine;
+            }
+        }
+
+        return targetLine;
+    }
 }
