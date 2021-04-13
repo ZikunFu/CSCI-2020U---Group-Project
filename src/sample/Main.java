@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -24,31 +25,47 @@ import javafx.scene.canvas.Canvas;
 import javafx.util.Duration;
 import javafx.scene.control.Label;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 
 public class Main extends Application {
     private Canvas canvas;
     //private double screenWidth = 100;
     //private double screenHeight = 600;
 
+    private Socket socket = null;
+    private BufferedReader in = null;
+    private PrintWriter networkOut = null;
+    private BufferedReader networkIn = null;
+
+    ListView<String> list;
+    public  static String SERVER_ADDRESS = "localhost";
+    public  static int    SERVER_PORT = 16789;
     @Override
     public void start(Stage primaryStage) throws Exception{
-        //socket
-        try {
-            socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-        } catch (UnknownHostException e) {
-            System.err.println("Unknown host: "+SERVER_ADDRESS);
-        } catch (IOException e) {
-            System.err.println("IOEXception while connecting to server: "+SERVER_ADDRESS);
-        }
-        if (socket == null) {
-            System.err.println("socket is null");
-        }
-        try {
-            networkOut = new PrintWriter(socket.getOutputStream(), true);
-            networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            System.err.println("IOEXception while opening a read/write connection");
-        }
+        //Thread for establishing server connection
+        new Thread(()-> {
+            while (true) {
+                try {
+                    socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+                    if (socket != null) {
+                        networkOut = new PrintWriter(socket.getOutputStream(), true);
+                        networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        break;
+                    }
+                    System.out.println("trying to connect...");
+                } catch (UnknownHostException e) {
+                    System.err.println("Unknown host: "+SERVER_ADDRESS);
+                } catch (IOException e) {
+                    System.err.println("IOEXception while connecting to server: "+SERVER_ADDRESS);
+                }
+
+            } }).start();
 
         //login
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -105,20 +122,20 @@ public class Main extends Application {
 
             String message = null;
 
-            networkOut.println("Login" + tf1.getText() + tf2.getText());
+            networkOut.println("Login " + tf1.getText() + " " + tf2.getText());
             try {
                 message = networkIn.readLine();
             } catch (IOException e) {
                 System.err.println("Error reading response to login.");
             }
 
-            if(message == "correct"){
+            if(message.equals("correct")){
                 label.setText("Login Successfully");
             }
-            else if(message == "invalidAccount"){
+            else if(message.equals("invalidAccount")){
                 label.setText("Invalid Account");
             }
-            else if(message == "invalidPassword"){
+            else if(message.equals("invalidPassword")){
                 label.setText("Invalid Password");
             }
         });
@@ -128,17 +145,17 @@ public class Main extends Application {
 
             String message = null;
 
-            networkOut.println("Register" + tf1.getText() + tf2.getText());
+            networkOut.println("Register " + tf1.getText() + " " + tf2.getText());
             try {
                 message = networkIn.readLine();
             } catch (IOException e) {
                 System.err.println("Error reading response to Register.");
             }
 
-            if(message == "invalidAccount"){
+            if(message.equals("invalidAccount")){
                 label.setText("Invalid Account");
             }
-            else if(message == "correct"){
+            else if(message.equals("correct")){
                 label.setText("Register Successfully");
             }
 

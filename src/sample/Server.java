@@ -50,6 +50,7 @@ public class Server {
                 battle(threads[0], threads[1]);
                 threads[0].setReady(false);
                 threads[1].setReady(false);
+                break;
             }
         }
 
