@@ -7,6 +7,8 @@ public class ClientConnectionHandler extends Thread{
     protected BufferedReader in;  //networkInput
     protected PrintWriter out;    //networkOutput
     protected File userProfile;
+    protected boolean ready;
+    protected Player currentPlayer;
 
     public ClientConnectionHandler(Socket socket, File userProfile) throws IOException {
         super();
@@ -14,6 +16,7 @@ public class ClientConnectionHandler extends Thread{
         this.userProfile = userProfile;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
+        ready = false;
     }
 
     public void run() {
@@ -38,17 +41,11 @@ public class ClientConnectionHandler extends Thread{
             }
             boolean threadEnd = false;
             while (!threadEnd) {
-                /*try {*/ threadEnd = serverAction(command, argument); //}
-                /*
-                catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    System.err.println("Error: "+e);
+                try {
+                    threadEnd = serverAction(command, argument);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    System.err.println("Error: "+e);
                 }
-
-                 */
             }
 
             //closing socket
@@ -57,8 +54,17 @@ public class ClientConnectionHandler extends Thread{
         }
         else { System.err.println("Error: Command is null"); }
     }
-    protected boolean serverAction(String command, String argument){
-        return true;
+    protected boolean serverAction(String command, String argument) throws IOException {
+        if(command=="Login"||command=="Register"){
+            userLogin(command,argument);
+        }
+        else if(command=="profile"||command=="bag"){
+            getProfile(command,argument);
+        }
+        else if(command=="battle"){
+            battle(argument);
+        }
+        return false;
     }
     protected void userLogin(String command, String argument) throws IOException {
         String username;
@@ -66,6 +72,7 @@ public class ClientConnectionHandler extends Thread{
         username = argument.split(" ")[0];
         password = argument.split(" ")[1];
         if(command == "Login"){
+            System.out.println("Login received with argument<"+argument+">");
             fileManager fm = new fileManager();
             boolean accountExist = false, passwordExist = false;
             accountExist = fm.matchCSV(userProfile,username,0);
@@ -81,6 +88,7 @@ public class ClientConnectionHandler extends Thread{
             }
         }
         else if(command == "Register"){
+            System.out.println("Register received with argument<"+argument+">");
             fileManager fm = new fileManager();
             boolean accountExist = false;
             accountExist = fm.matchCSV(userProfile,argument,0);
@@ -100,18 +108,35 @@ public class ClientConnectionHandler extends Thread{
         String data = fm.searchCSV(userProfile,username,0);
         String temp[] = data.split(" ");
         if(command == "profile"){
+            System.out.println("Profile received with argument<"+argument+">");
             //hp, attack, defence, rank
             String profile = temp[2]+" "+temp[3]+" "+temp[4]+" "+temp[5];
             out.println(profile);
         }
         else if(command == "bag"){
+            System.out.println("bag received with argument<"+argument+">");
             //item
             String bag = temp[6];
             out.println(bag);
         }
     }
-    protected void battle(){
+    protected void battle(String username) throws IOException {
+        System.out.println("Battle received with username<"+username+">");
+        ready = true;
+        fileManager fm = new fileManager();
+        String data = fm.searchCSV(userProfile,username,0);
+        String temp[] = data.split(" ");
+        currentPlayer = new Player(temp[0],temp[1],Integer.parseInt(temp[2]),Integer.parseInt(temp[3]),Integer.parseInt(temp[4]),Integer.parseInt(temp[5]),temp[6].split(" "));
+    }
 
+    public boolean isReady(){
+        return ready;
+    }
+    public void setReady(boolean setter){
+        ready = setter;
+    }
+    public Player getPlayer(){
+        return currentPlayer;
     }
 
 
