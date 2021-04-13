@@ -20,7 +20,29 @@ public class ClientConnectionHandler extends Thread{
     }
 
     public void run() {
-        String input = null, command, argument;
+
+        boolean threadEnd = false;
+        while (!threadEnd) {
+            String input = null, command, argument;
+            input = listen();
+            command = input.split(" ", 2)[0];
+            argument = input.split(" ", 2)[1];
+            if(input!=null){
+                try {
+                    threadEnd = serverAction(command, argument);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        //closing socket
+        try { clientSocket.close(); }
+            catch (IOException e) { e.printStackTrace(); }
+
+    }
+    protected String listen(){
+        String input = null;
         try {
             System.out.println("listening for message");
             input = in.readLine();
@@ -29,39 +51,17 @@ public class ClientConnectionHandler extends Thread{
             e.printStackTrace();
             System.err.println("Error: "+e);
         }
-        if(input!=null){
-            //check for single line command
-            if(input.split(" ").length!=1){
-                command = input.split(" ", 2)[0];
-                argument = input.split(" ", 2)[1];
-            }
-            else{
-                command= input.split(" ", 2)[0];
-                argument = null;
-            }
-            boolean threadEnd = false;
-            while (!threadEnd) {
-                try {
-                    threadEnd = serverAction(command, argument);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //closing socket
-            try { clientSocket.close(); }
-            catch (IOException e) { e.printStackTrace(); }
-        }
-        else { System.err.println("Error: Command is null"); }
+        return input;
     }
     protected boolean serverAction(String command, String argument) throws IOException {
-        if(command=="Login"||command=="Register"){
+        System.out.println("Server Action");
+        if(command.equals("Login")||command.equals("Register")){
             userLogin(command,argument);
         }
-        else if(command=="profile"||command=="bag"){
+        else if(command.equals("profile")||command.equals("bag")){
             getProfile(command,argument);
         }
-        else if(command=="battle"){
+        else if(command.equals("battle")){
             battle(argument);
         }
         return false;
@@ -71,7 +71,7 @@ public class ClientConnectionHandler extends Thread{
         String password;
         username = argument.split(" ")[0];
         password = argument.split(" ")[1];
-        if(command == "Login"){
+        if(command.equals("Login")){
             System.out.println("Login received with argument<"+argument+">");
             fileManager fm = new fileManager();
             boolean accountExist = false, passwordExist = false;
@@ -87,16 +87,16 @@ public class ClientConnectionHandler extends Thread{
                 out.println("invalidPassword");
             }
         }
-        else if(command == "Register"){
+        else if(command.equals("Register")){
             System.out.println("Register received with argument<"+argument+">");
             fileManager fm = new fileManager();
             boolean accountExist = false;
-            accountExist = fm.matchCSV(userProfile,argument,0);
+            accountExist = fm.matchCSV(userProfile,username,0);
             if(accountExist){
                 out.println("invalidAccount");
             }
             else {
-                fm.appendCSV(userProfile,username + " " + password + "50,10,2,1,potion bomb knife armor fireball");
+                fm.appendCSV(userProfile,username + "," + password + ",50,10,2,1,potion bomb knife armor fireball");
                 out.println("correct");
             }
         }
@@ -107,13 +107,13 @@ public class ClientConnectionHandler extends Thread{
         String username = argument;
         String data = fm.searchCSV(userProfile,username,0);
         String temp[] = data.split(" ");
-        if(command == "profile"){
+        if(command.equals("profile")){
             System.out.println("Profile received with argument<"+argument+">");
             //hp, attack, defence, rank
             String profile = temp[2]+" "+temp[3]+" "+temp[4]+" "+temp[5];
             out.println(profile);
         }
-        else if(command == "bag"){
+        else if(command.equals("bag")){
             System.out.println("bag received with argument<"+argument+">");
             //item
             String bag = temp[6];

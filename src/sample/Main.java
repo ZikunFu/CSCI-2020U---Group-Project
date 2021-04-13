@@ -13,7 +13,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -23,9 +26,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.*;
 import java.awt.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
+
 import javafx.util.Duration;
 import org.w3c.dom.*;
 import java.io.File;
@@ -38,40 +39,35 @@ public class Main extends Application {
     private PrintWriter networkOut = null;
     private BufferedReader networkIn = null;
 
-    //String LOCAL_PATH ="local_Shared/";
-    //String SERVER_IP = "127.0.0.1";
-    //int SERVER_PORT = 16789;
-    //ListView<String> list;
+    ListView<String> list;
     public  static String SERVER_ADDRESS = "localhost";
     public  static int    SERVER_PORT = 16789;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        //socket
-        /*
-        try {
-            socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-        } catch (UnknownHostException e) {
-            System.err.println("Unknown host: "+SERVER_ADDRESS);
-        } catch (IOException e) {
-            System.err.println("IOEXception while connecting to server: "+SERVER_ADDRESS);
-        }
-        if (socket == null) {
-            System.err.println("socket is null");
-        }
-        try {
-            networkOut = new PrintWriter(socket.getOutputStream(), true);
-            networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            System.err.println("IOEXception while opening a read/write connection");
-        }
 
-         */
+        //Thread for establishing server connection
+        new Thread(()-> {
+            while (true) {
+                try {
+                    socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+                    if (socket != null) {
+                        networkOut = new PrintWriter(socket.getOutputStream(), true);
+                        networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        break;
+                    }
+                    System.out.println("trying to connect...");
+                } catch (UnknownHostException e) {
+                    System.err.println("Unknown host: "+SERVER_ADDRESS);
+                } catch (IOException e) {
+                    System.err.println("IOEXception while connecting to server: "+SERVER_ADDRESS);
+                }
 
+            } }).start();
 
         //UI
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Game");
+
+        primaryStage.setTitle("VS Game");
 
         GridPane myGrid = new GridPane();
         myGrid.setAlignment(Pos.CENTER);
@@ -97,7 +93,7 @@ public class Main extends Application {
         myGrid.add(register, 1, 5);
 
         myGrid.add(label, 1, 6);
-        //label.setText("222");
+        label.setText("");
 
         //right half
         Group root1 = new Group();
@@ -138,6 +134,7 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+        //TODO: Animation and logo
         //draw(root1);
         //drawAnimation(root2);
 
@@ -145,40 +142,42 @@ public class Main extends Application {
         login.setOnAction(actionEvent -> {
 
             String message = null;
-
-            networkOut.println("Login" + tf1.getText() + tf2.getText());
+        //TODO: note that there are spaces between command and arguments
+            networkOut.println("Login " + tf1.getText() + " " + tf2.getText());
             try {
                 message = networkIn.readLine();
+                System.out.println(message);
             } catch (IOException e) {
                 System.err.println("Error reading response to login.");
             }
-
-            if(message == "correct"){
+        //TODO: note that comparing strings should use the .equals method
+            if(message.equals("correct")){
                 label.setText("Login Successfully");
             }
-            else if(message == "invalidAccount"){
-                label.setText("Invalid Account");
+            else if(message.equals("invalidAccount")){
+                label.setText("Cannot find this account");
             }
-            else if(message == "invalidPassword"){
-                label.setText("Invalid Password");
+            else if(message.equals("invalidPassword")){
+                label.setText("Password incorrect");
             }
+            //TODO: goto scene 2
         });
 
         register.setOnAction(actionEvent -> {
 
             String message = null;
-
-            networkOut.println("Register" + tf1.getText() + tf2.getText());
+        //TODO: note that there are spaces between command and arguments
+            networkOut.println("Register " + tf1.getText() + " " + tf2.getText());
             try {
                 message = networkIn.readLine();
             } catch (IOException e) {
                 System.err.println("Error reading response to Register.");
             }
-
-            if(message == "invalidAccount"){
-                label.setText("Invalid Account");
+        //TODO: note that comparing strings should use the .equals method
+            if(message.equals("invalidAccount")){
+                label.setText("Account already exists");
             }
-            else if(message == "correct"){
+            else if(message.equals("correct")){
                 label.setText("Register Successfully");
             }
 

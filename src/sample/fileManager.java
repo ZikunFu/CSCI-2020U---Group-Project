@@ -141,7 +141,7 @@ public class fileManager {
         while ((nextLine = br.readLine())!=null){
             String[] col = nextLine.split(",");
             String str = col[column];
-            if(str==target){
+            if(str.equals(target)){
                 found = true;
             }
         }
@@ -155,7 +155,7 @@ public class fileManager {
         while ((nextLine = br.readLine())!=null){
             String[] col = nextLine.split(",");
             String str = col[column];
-            if(str==target){
+            if(str.equals(target)){
                 targetLine=nextLine;
             }
         }

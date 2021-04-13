@@ -29,10 +29,11 @@ public class Server {
         if(!USER_PROFILE.exists()){
             fileManager fm = new fileManager();
             fm.createProfile(USER_PROFILE);
+            System.out.println("User Profile not found, default profile created in Server_Data");
         }
 
         // to make sure it is multi-thread
-        while (count<=2){
+        while (count<=3){
             clientSocket = serverSocket.accept();
             System.out.println("Connection "+count+" established");
             threads[count] = new ClientConnectionHandler(clientSocket,USER_PROFILE);
@@ -41,6 +42,7 @@ public class Server {
         }
 
         //check if both players are ready for battle
+
         while (true){
             if(threads[0].isReady()&&threads[1].isReady()){
                 System.out.println("server ready check!");
@@ -49,6 +51,7 @@ public class Server {
                 threads[1].setReady(false);
             }
         }
+
     }
     public void battle(ClientConnectionHandler player1, ClientConnectionHandler player2){
         System.out.println("Battle started between "+player1.getPlayer().username+" and "+player2.getPlayer().username);
