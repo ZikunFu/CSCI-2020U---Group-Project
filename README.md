@@ -18,12 +18,23 @@ c. How to run: \
 &nbsp;&nbsp;&nbsp;&nbsp;3.Note: Launching from IDE need to add VM arguments:\
 &nbsp;&nbsp;&nbsp;&nbsp;"--module-path /path/to/javafx-sdk-11.0.2/lib --add-modules javafx.controls,javafx.fxml"\
 &nbsp;&nbsp;&nbsp;&nbsp;4.Set command line arguments for Main.java(default: "127.0.0.1 local_shared/")\
-&nbsp;&nbsp;&nbsp;&nbsp;Note: default port is 16789, default MaxThread is 20, \
-&nbsp;&nbsp;&nbsp;&nbsp; default SERVER_PATH is "server_shared", default LOCAL_PATH is "local_shared"\
-&nbsp;&nbsp;&nbsp;&nbsp;5.IMPORTANT: Always launch fileServer.java before Main.java\
-&nbsp;&nbsp;&nbsp;&nbsp;6.Launch Main.java.\
-&nbsp;&nbsp;&nbsp;&nbsp;7.Testing files are already created in local_shared and server_shared folders.
+&nbsp;&nbsp;&nbsp;&nbsp;Note: default port is 16789, MaxThread is 2, \
+&nbsp;&nbsp;&nbsp;&nbsp; default SERVER_PATH is "server_shared" this is where "userProfile.csv" is saved\
+&nbsp;&nbsp;&nbsp;&nbsp;5.IMPORTANT: Only two clients are allowed to connect since this is a two-player-versus game\
+&nbsp;&nbsp;&nbsp;&nbsp;6.Launch two instances of Main.java.\
+&nbsp;&nbsp;&nbsp;&nbsp;7.Launch Server.java.\
+&nbsp;&nbsp;&nbsp;&nbsp;8.Testing username and pass word can be found inside userProfile.csv\
 
-d. Other resources: \
+d. How to play: \
+&nbsp;&nbsp;&nbsp;&nbsp;1.Register an account\
+&nbsp;&nbsp;&nbsp;&nbsp;2.You can view your stats by clicking "profile"\
+&nbsp;&nbsp;&nbsp;&nbsp;3.You can view your items by clicking "bag"\
+&nbsp;&nbsp;&nbsp;&nbsp;4.The game is an auto battler between two players\
+&nbsp;&nbsp;&nbsp;&nbsp;5.Both players should ready by clicking "battle" to initiate the battle\
+&nbsp;&nbsp;&nbsp;&nbsp;6.During battle, you will roll a die before attacking which determine if an item is used\
+&nbsp;&nbsp;&nbsp;&nbsp;7.When battle is completed you will be awarded with ranks and items if you won\
+&nbsp;&nbsp;&nbsp;&nbsp;8.Rank affects attack and defence\
+
+e. Other resources: \
 &nbsp;&nbsp;&nbsp;&nbsp;1.ChatServer provided by professor Mariana Shimabukuro in canvas.\
 &nbsp;&nbsp;&nbsp;&nbsp;2.Button Icons from free opensource website "flaticon.com"
