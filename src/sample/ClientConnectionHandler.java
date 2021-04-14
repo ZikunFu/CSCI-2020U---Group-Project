@@ -2,6 +2,10 @@ package sample;
 
 import java.io.*;
 import java.net.Socket;
+
+/**
+ * this class is a single thread for a given user
+ */
 public class ClientConnectionHandler extends Thread{
     protected Socket clientSocket;//Socket
     protected BufferedReader in;  //networkInput
@@ -10,6 +14,7 @@ public class ClientConnectionHandler extends Thread{
     protected boolean ready;
     protected Player currentPlayer;
 
+    //Constructor
     public ClientConnectionHandler(Socket socket, File userProfile) throws IOException {
         super();
         clientSocket = socket;
@@ -19,8 +24,13 @@ public class ClientConnectionHandler extends Thread{
         ready = false;
     }
 
+    /**
+     * This method runs the thread
+     * it uses listen() and serverAction()
+     * to listen and respond to client messages
+     * @throws IOException
+     */
     public void run() {
-
         boolean threadEnd = false;
         while (!threadEnd) {
             String input = null, command, argument;
@@ -28,19 +38,20 @@ public class ClientConnectionHandler extends Thread{
             command = input.split(" ", 2)[0];
             argument = input.split(" ", 2)[1];
             if(input!=null){
-                try {
-                    threadEnd = serverAction(command, argument);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                try { threadEnd = serverAction(command, argument); }
+                catch (IOException e) { e.printStackTrace(); }
             }
         }
-
         //closing socket
         try { clientSocket.close(); }
-            catch (IOException e) { e.printStackTrace(); }
-
+        catch (IOException e) { e.printStackTrace(); }
     }
+
+    /**
+     * This method is used to listen for message from client
+     * then returns the message
+     * @return The message we heard from client
+     */
     protected String listen(){
         String input = null;
         try {
@@ -53,6 +64,14 @@ public class ClientConnectionHandler extends Thread{
         }
         return input;
     }
+
+    /**
+     * This method is used to extinguish different command from the message
+     * @param command the command in message
+     * @param argument the argument in message
+     * @return True if we want the thread to end
+     * @throws IOException
+     */
     protected boolean serverAction(String command, String argument) throws IOException {
         System.out.println("Server Action");
         if(command.equals("Login")||command.equals("Register")){
@@ -66,6 +85,14 @@ public class ClientConnectionHandler extends Thread{
         }
         return false;
     }
+
+    /**
+     * This method is used to realize the login\register command
+     * it can authenticate the user login or register an account
+     * @param command the command in message
+     * @param argument the argument in message
+     * @throws IOException
+     */
     protected void userLogin(String command, String argument) throws IOException {
         String username;
         String password;
@@ -102,6 +129,14 @@ public class ClientConnectionHandler extends Thread{
         }
 
     }
+
+    /**
+     * This method is used to realize the profile\bag command
+     * it can send the user's profile to the client
+     * @param command the command in message
+     * @param argument the argument in message
+     * @throws IOException
+     */
     protected void getProfile(String command, String argument) throws IOException {
         fileManager fm = new fileManager();
         String username = argument;
@@ -120,6 +155,13 @@ public class ClientConnectionHandler extends Thread{
             out.println(bag);
         }
     }
+
+    /**
+     * This method is used to realize the battle command
+     * it can alert the server to initiate battle and
+     * create the class Player based on the current user profile
+     * @throws IOException
+     */
     protected void battle(String username) throws IOException {
         System.out.println("Battle received with username<"+username+">");
         ready = true;
@@ -129,6 +171,7 @@ public class ClientConnectionHandler extends Thread{
         currentPlayer = new Player(temp[0],temp[1],Integer.parseInt(temp[2]),Integer.parseInt(temp[3]),Integer.parseInt(temp[4]),Integer.parseInt(temp[5]),temp[6].split(" "));
     }
 
+    //getter and setter for player profile and battle indicators
     public boolean isReady(){
         return ready;
     }

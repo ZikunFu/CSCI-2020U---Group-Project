@@ -4,106 +4,23 @@ import java.io.*;
 import java.util.Scanner;
 
 /**
- * this class is used to realize the functions during connection
- * including "read path", "read file" "write file" "find file" "make file list"
+ * this class is used for file management, CSV files specifically
+ * including numerous methods for reading/writing files.
  */
 public class fileManager {
     fileManager(){}
 
     /**
-     * this method is used to save the content in the file
-     * and used to transfer From Clint to Server by reading the path
-     * also used to "view" the file inside
-     * the data is the content about the file
-     * @param path the string that includes the file path
-     * @return the file's content
-     * @throws FileNotFoundException
-     */
-    public String readPath(String path) throws FileNotFoundException {
-        File file = new File(path);
-        Scanner fileReader = new Scanner(file);
-        StringBuilder data = new StringBuilder();
-        while (fileReader.hasNextLine()) {
-            data.append(fileReader.nextLine());
-        }
-        fileReader.close();
-        return data.toString();
-    }
-
-    /**
-     * same as the last method, however
-     * this time is used for the content "download" to client
-     * and the parameter is the file instead of the path
-     * @param file the file about to transfer
-     * @return the content of the file
-     * @throws FileNotFoundException
-     */
-    public String readFile(File file) throws FileNotFoundException {
-        Scanner fileReader = new Scanner(file);
-        StringBuilder data = new StringBuilder();
-        while (fileReader.hasNextLine()) {
-            data.append(fileReader.nextLine());
-        }
-        fileReader.close();
-        return data.toString();
-    }
-
-    /**
-     * this method is used to store a file
-     * @param path the destination path
-     * @param data the content about to deliver
+     * This method is used to create the default
+     * user Profile csv file
+     * @param file the target directory
      * @throws IOException
      */
-    public void writeFile(String path,String data) throws IOException {
-        FileWriter fileWriter = new FileWriter(path);
-        fileWriter.append(data);
-        fileWriter.flush();
-        fileWriter.close();
-    }
-
-    /**
-     * this method is used to find the file that is targeted
-     * used for-loop in files
-     * when the name is matched, then return the file
-     * @param fileName the target file's name
-     * @param dir directory of files
-     * @return file we want
-     */
-    public File findFile(String fileName, File dir){
-        for (File file : dir.listFiles()) {
-            if(file.getName().equals(fileName)){ return file; }
-            else if(file.isDirectory()){
-                for(File file1 : file.listFiles()){
-                    if(file1.getName().equals(fileName)){ return file1; }
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * this method is used to return a list of files given a directory
-     * @param dir directory of files
-     * @return the list of the files
-     */
-    public String getFileList(File dir){
-        String temp="";
-        for (File file : dir.listFiles()) {
-            if(file.isFile()){ temp+=file.getName()+" "; }
-        }
-
-        for (File file : dir.listFiles()) {
-            if(file.isDirectory()){
-                temp+="@"+file.getName()+" ";
-                for(File subFile : file.listFiles()){
-                    temp+=subFile.getName()+" ";
-                }
-            }
-        }
-        return temp;
-    }
-
     public void createProfile(File file) throws IOException {
+        //make a directory if the given directory does not exisit
+        if(!file.exists()){
+            file.mkdirs();
+        }
         FileWriter csvWriter = new FileWriter(file);
         csvWriter.append("username");
         csvWriter.append(",");
@@ -123,17 +40,28 @@ public class fileManager {
         csvWriter.close();
     }
 
-    //data will be <apple banana candy>
+    /**
+     * This method is used to append data to the target CSV file
+     * @param path the target location
+     * @param data the String to write
+     * @throws IOException
+     */
     public void appendCSV(File path, String data) throws IOException {
         FileWriter csvWriter = new FileWriter(path,true);
         csvWriter.append(data);
         csvWriter.append("\n");
         csvWriter.flush();
         csvWriter.close();
-
     }
 
-    //search for target String in specific column of CSV
+    /**
+     * This method is used to find target string given the column
+     * @param path the target file
+     * @param target the target String
+     * @param column the target column in file
+     * @return true of false given the existence of target string
+     * @throws IOException
+     */
     public boolean matchCSV(File path, String target, int column) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(path));
         String nextLine;
@@ -148,6 +76,16 @@ public class fileManager {
         br.close();
         return found;
     }
+
+    /**
+     * This method is used to find target string given the column
+     * then returns the whole row back as string
+     * @param path the target file
+     * @param target the target String
+     * @param column the target column in file
+     * @return The String with the row containing target String
+     * @throws IOException
+     */
     public String searchCSV(File path, String target, int column) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(path));
         String nextLine;
@@ -159,7 +97,6 @@ public class fileManager {
                 targetLine=nextLine;
             }
         }
-
         return targetLine;
     }
 }

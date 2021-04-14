@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * this class is used to initialize multi-threads server
+ * this class is used to initialize a multi-threaded server
  */
 public class Server {
     //server config
