@@ -138,6 +138,12 @@ public class Main extends Application {
         //Creating Battle Scene
         //TODO: fill the printing
         TextArea textArea = new TextArea();
+        BorderPane border3 = new BorderPane();
+        VBox vbox1 = new VBox();
+        vbox1.getChildren().add(textArea);
+        border3.setCenter(vbox1);
+        Scene battle_scene = new Scene(,600,400);
+
 
 
 
@@ -233,7 +239,13 @@ public class Main extends Application {
         });
         battle.setOnAction(actionEvent -> {
             networkOut.println("battle");
-            primaryStage.setScene(prebattle_scene);
+            try {
+                if(networkIn.readLine().equals("start")){
+                    primaryStage.setScene(prebattle_scene);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
         back.setOnAction(actionEvent ->{
             primaryStage.setScene(main_scene);
