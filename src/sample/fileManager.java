@@ -94,7 +94,7 @@ public class fileManager {
             String[] col = nextLine.split(",");
             String str = col[column];
             if(str.equals(target)){
-                targetLine=nextLine;
+                targetLine = nextLine;
             }
         }
         return targetLine;
