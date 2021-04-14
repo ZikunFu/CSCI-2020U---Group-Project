@@ -18,13 +18,13 @@ public class Server {
      * this method is used to establish multiple threads
      * @throws IOException
      */
-    public Server() throws IOException {
+    public Server() throws IOException, InterruptedException {
         Socket clientSocket ;
 
         ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
         ClientConnectionHandler[] threads =
                 new ClientConnectionHandler[MAX_THREAD];
-        int count = 1;
+        int count = 0;
 
         //initialize default userProfile
         if(!USER_PROFILE.exists()){
@@ -34,28 +34,31 @@ public class Server {
         }
 
         // to make sure it is multi-thread
-        while (count<=3){
+        while (count<=1){
             clientSocket = serverSocket.accept();
             System.out.println("Connection "+count+" established");
             threads[count] = new ClientConnectionHandler(clientSocket,USER_PROFILE);
             threads[count].start();
             count++;
         }
+        System.out.println("SERVER: Stopped listening for new connections");
 
         //check if both players are ready for battle
 
         while (true){
+            System.out.println("SERVER: ready check for thread 1: "+threads[0].isReady());
+            System.out.println("SERVER: ready check for thread 2: "+threads[1].isReady());
             if(threads[0].isReady()&&threads[1].isReady()){
-                System.out.println("server ready check!");
+                System.out.println("SERVER: Ready check completed!");
                 battle(threads[0], threads[1]);
                 threads[0].setReady(false);
                 threads[1].setReady(false);
-                break;
             }
+            Thread.sleep(3000);
         }
-
     }
     public void battle(ClientConnectionHandler p1, ClientConnectionHandler p2){
+        System.out.println("SERVER: Battle!");
         Player player1;
         Player player2;
 
@@ -80,8 +83,8 @@ public class Server {
         while(!isOver){
             //Round start Phase
             System.out.println("Round: "+round);
-            System.out.println("Player <"+player1.username+"> hp:"+player1.hp);
-            System.out.println("Player <"+player2.username+"> hp:"+player2.hp);
+            System.out.println("Player <"+player1.username+"> hp:"+p1_hp);
+            System.out.println("Player <"+player2.username+"> hp:"+p2_hp);
 
             //Calculate damage
             int damageByP1 = player1.getAttack()-player2.getDefence();
@@ -163,6 +166,7 @@ public class Server {
                 isOver = true;
             }
             round++;
+            System.out.println("");
         }
         if(p1Victory){
             System.out.println(player1.username+" victory!");
@@ -173,6 +177,7 @@ public class Server {
             player2.rank++;
         }
         System.out.println("Battle Over");
+
     }
-    public static void main(String[] args) throws IOException { Server server = new Server(); }
+    public static void main(String[] args) throws IOException, InterruptedException { Server server = new Server(); }
 }
