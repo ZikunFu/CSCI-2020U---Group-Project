@@ -14,7 +14,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
@@ -109,6 +111,25 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+
+
+        //Creating mainScene
+        BorderPane border1 = new BorderPane();
+        Button profile = new Button("Profile");
+        Button bag = new Button("Bag");
+        Button battle = new Button("Battle");
+        list = new ListView<>();
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(profile,bag,battle);
+        border1.setLeft(vbox);
+        border1.setRight(list);
+        Scene main_scene = new Scene(border1,600,400);
+        //
+        BorderPane border2 = new BorderPane();
+        Scene prebattle_scene = new Scene(border2,600,400);
+
+
+
 //        drawing graphics - shapes and image
         draw(root);
 
@@ -133,6 +154,7 @@ public class Main extends Application {
             }
             else if(message.equals("correct")){
                 label.setText("Login Successfully");
+                primaryStage.setScene(main_scene);
             }
             else if(message.equals("invalidAccount")){
                 label.setText("Invalid Account");
@@ -143,6 +165,7 @@ public class Main extends Application {
         });
 
         //Register
+        String account;
         register.setOnAction(actionEvent -> {
 
             String message = null;
@@ -165,6 +188,27 @@ public class Main extends Application {
             }
 
         });
+        profile.setOnAction(actionEvent -> {
+        networkOut.println("Profile");
+            try {
+                System.out.println(networkIn.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        bag.setOnAction(actionEvent -> {
+            networkOut.println("Bag");
+            try {
+                System.out.println(networkIn.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        battle.setOnAction(actionEvent -> {
+            networkOut.println("Battle");
+            primaryStage.setScene(prebattle_scene);
+        });
+
     }
 
     final private int frameWidth = 480;
@@ -175,7 +219,7 @@ public class Main extends Application {
     private int frameIndex = 0;
 
 
-    private void drawAnimation(Group root) {
+   private void drawAnimation(Group root) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 //loading image sprite using relative path
         Image image = new Image(getClass().getClassLoader().getResource("images/bruce.jpg").toString());

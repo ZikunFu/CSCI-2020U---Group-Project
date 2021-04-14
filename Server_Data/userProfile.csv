@@ -1,2 +1,6 @@
 username,password,hp,attack,defence,rank,item
+<<<<<<< HEAD
+abcd123,123456,50,10,2,1,potion bomb knife armor fireball
+=======
 asdasd,dddddd,50,10,2,1,potion bomb knife armor fireball
+>>>>>>> origin/master
