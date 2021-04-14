@@ -107,7 +107,7 @@ public class Main extends Application {
         canvas.heightProperty().bind(primaryStage.heightProperty());
 
         //root.getChildren().addAll(myGrid, canvas);
-        root.getChildren().addAll(myGrid);
+        root.getChildren().addAll(canvas, myGrid);
 
         primaryStage.setTitle("Graphics - Hello World");
         primaryStage.setScene(scene);
