@@ -3,6 +3,7 @@ package sample;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -23,8 +24,8 @@ import javafx.stage.Stage;
 import javafx.scene.canvas.Canvas;
 import javafx.util.Duration;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -112,8 +113,6 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-
-
         //Creating mainScene
         BorderPane border1 = new BorderPane();
         Button profile = new Button("profile");
@@ -137,17 +136,13 @@ public class Main extends Application {
 
         //Creating Battle Scene
         //TODO: fill the printing
+
         TextArea textArea = new TextArea();
-        BorderPane border3 = new BorderPane();
+
         VBox vbox1 = new VBox();
-        vbox1.getChildren().add(textArea);
-        border3.setCenter(vbox1);
-        Scene battle_scene = new Scene(,600,400);
+        vbox1.getChildren().addAll(textArea,back);
 
-
-
-
-
+        Scene battle_scene = new Scene(vbox1,600,400);
 
 //        drawing graphics - shapes and image
         //draw(root);
@@ -184,7 +179,6 @@ public class Main extends Application {
         });
 
         //Register
-        String account;
         register.setOnAction(actionEvent -> {
 
             String message = null;
@@ -239,13 +233,35 @@ public class Main extends Application {
         });
         battle.setOnAction(actionEvent -> {
             networkOut.println("battle");
-            try {
-                if(networkIn.readLine().equals("start")){
-                    primaryStage.setScene(prebattle_scene);
+            primaryStage.setScene(prebattle_scene);
+            new Thread(()-> {
+                while (true){
+                    try {
+                        String message = networkIn.readLine();
+                        if(message!=null){
+                            if(message.equals("start")){
+                                Platform.runLater(new Runnable(){
+                                    @Override
+                                    public void run() {
+                                        primaryStage.setScene(battle_scene);
+                                        try {
+                                            textArea.setText(networkIn.readLine());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                                break;
+                            }
+                            else {
+                                System.err.println("?????"+message);
+                            }
+                        }
+                    }
+                    catch (IOException e) { e.printStackTrace(); }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            }).start();
         });
         back.setOnAction(actionEvent ->{
             primaryStage.setScene(main_scene);

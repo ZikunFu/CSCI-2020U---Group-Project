@@ -179,6 +179,9 @@ public class ClientConnectionHandler extends Thread{
         ready = true;
     }
 
+    public void outPut(String msg){
+        out.println(msg);
+    }
     //getter and setter for player profile and battle indicators
     public boolean isReady(){
         return ready;
