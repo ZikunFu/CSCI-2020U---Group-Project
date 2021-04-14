@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -94,7 +95,13 @@ public class Main extends Application {
         myGrid.add(login, 1, 4);
         Button register = new Button("Register");
         myGrid.add(register, 1, 5);
-
+        //adding image for login and register
+        Image img1 = new Image("sample/resources/images/login.png",20,20,true,true);
+        Image img2 = new Image("sample/resources/images/register.png",20,20,true,true);
+        ImageView view1 = new ImageView(img1);
+        ImageView view2 = new ImageView(img2);
+        login.setGraphic(view1);
+        register.setGraphic(view2);
         myGrid.add(label, 1, 6);
 
         //LOGO
@@ -124,18 +131,23 @@ public class Main extends Application {
         border1.setLeft(vbox);
         border1.setRight(list);
         Scene main_scene = new Scene(border1,600,400);
+        Image img3 = new Image("sample/resources/images/profile.png",20,20,true,true);
+        Image img4 = new Image("sample/resources/images/bag.png",20,20,true,true);
+        Image img5 = new Image("sample/resources/images/battle.png",20,20,true,true);
+        ImageView view3 = new ImageView(img3);
+        ImageView view4 = new ImageView(img4);
+        ImageView view5 = new ImageView(img5);
+        profile.setGraphic(view3);
+        bag.setGraphic(view4);
+        battle.setGraphic(view5);
+
         //creating pre-battle Scene
         BorderPane border2 = new BorderPane();
-        Scene prebattle_scene = new Scene(border2,600,400);
-        ListView<String> list1 = new ListView<>();
-        ListView<String> list2 = new ListView<>();
-        border2.setLeft(list1);
-        border2.setRight(list2);
+        Label label1 = new Label("Waiting for the opponent");
+        Scene prebattle_scene = new Scene(label1,600,400);
         Button back = new Button("back");
-        border2.setCenter(back);
 
         //Creating Battle Scene
-        //TODO: fill the printing
 
         TextArea textArea = new TextArea();
 
@@ -238,14 +250,17 @@ public class Main extends Application {
                 while (true){
                     try {
                         String message = networkIn.readLine();
-                        if(message!=null){
+                        if (message!=null){
                             if(message.equals("start")){
                                 Platform.runLater(new Runnable(){
                                     @Override
                                     public void run() {
                                         primaryStage.setScene(battle_scene);
                                         try {
-                                            textArea.setText(networkIn.readLine());
+                                            String battle_lines;
+                                            battle_lines = networkIn.readLine();
+                                            String replace_string = battle_lines.replace('#','\n');
+                                            textArea.setText(replace_string);
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }

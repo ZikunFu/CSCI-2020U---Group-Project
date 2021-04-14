@@ -70,14 +70,14 @@ public class Server {
         if(randomNum==0){
             player1 = p1.getPlayer();
             player2 = p2.getPlayer();
-            log += player1.username+"@attacks#first!#";
+            log += player1.username+" attacks first!#";
         }
         else {
             player1 = p2.getPlayer();
             player2 = p1.getPlayer();
-            log += player2.username+"@attacks#first!#";
+            log += player2.username+" attacks first!#";
         }
-        log +="Battle@started@between "+player1.username+"@and@"+player2.username+"#";
+        log +="Battle started between "+player1.username+" and "+player2.username+"#";
 
         boolean isOver = false, p1Victory=false;
 
@@ -86,9 +86,9 @@ public class Server {
         int p2_hp=player2.hp;
         while(!isOver){
             //Round start Phase
-            log +="Round:@"+round+"#";
-            log +="Player@<"+player1.username+">@hp:"+p1_hp+"#";
-            log +="Player@<"+player2.username+">@hp:"+p2_hp+"#";
+            log +="Round:"+round+"#";
+            log +="Player<"+player1.username+">hp:"+p1_hp+"#";
+            log +="Player<"+player2.username+">hp:"+p2_hp+"#";
 
             //Calculate damage
             int damageByP1 = player1.getAttack()-player2.getDefence();
@@ -97,7 +97,7 @@ public class Server {
             //item Phase
             int itemNum = ThreadLocalRandom.current().nextInt(0, 4);
             if(itemNum==0){
-                log +="item@used@by"+player1.username+"#";
+                log +="item used by"+player1.username+"#";
                 if(player1.items.length!=0){
                     int item = ThreadLocalRandom.current().nextInt(0, player1.items.length);
                     if(player1.items[item].equalsIgnoreCase("Potion")){
@@ -117,16 +117,16 @@ public class Server {
                         damageByP2-=5;
                     }
                     else if(player1.items[item].equalsIgnoreCase("firebolt")){
-                        log +="Firebolt!#";
+                        log +="Firebolt!"+"#";
                         damageByP1+=20;
                     }
                 }
                 else {
-                    log +=player1.username + "@has@no@item!#";
+                    log +=player1.username + " has no item!#";
                 }
             }
             if(itemNum==1){
-                log +="item@used@by <"+player2.username+">#";
+                log +="item used by <"+player2.username+">#";
                 if(player2.items.length!=0){
                     int item = ThreadLocalRandom.current().nextInt(0, player2.items.length);
                     if(player2.items[item].equalsIgnoreCase("Potion")){
@@ -151,13 +151,13 @@ public class Server {
                     }
                 }
                 else {
-                    log +=player2.username + "@has@no@item!#";
+                    log +=player2.username + " has no item!#";
                 }
             }
 
             //attack phase
-            log +="<"+player1.username+">@deals@"+ damageByP1 + "@damage@to@<"+player2.username+">#";
-            log +="<"+player2.username+">@deals@"+ (player1.getAttack()-player1.getDefence())+"@damage@to@<"+player1.username+">#";
+            log +="<"+player1.username+"> deals "+ damageByP1 + " damage to <"+player2.username+">#";
+            log +="<"+player2.username+"> deals "+ (player1.getAttack()-player1.getDefence())+" damage to <"+player1.username+">#";
             p1_hp -= damageByP1;
             p2_hp -= damageByP2;
 
@@ -173,14 +173,14 @@ public class Server {
             System.out.println("");
         }
         if(p1Victory){
-            log +=player1.username+"@victory!#";
+            log +=player1.username+" victory!#";
             player1.rank++;
         }
         else {
-            log +=player2.username+"@victory!#";
+            log +=player2.username+" victory!#";
             player2.rank++;
         }
-        log += "Battle@Over#";
+        log += "Battle Over#";
         p1.out.println(log);
         p2.out.println(log);
     }
