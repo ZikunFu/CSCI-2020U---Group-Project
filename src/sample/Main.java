@@ -134,7 +134,9 @@ public class Main extends Application {
         border2.setRight(list2);
         Button back = new Button("back");
         border2.setCenter(back);
+
         //Creating Battle Scene
+        //TODO: fill the printing
         TextArea textArea = new TextArea();
 
 
@@ -199,18 +201,32 @@ public class Main extends Application {
             }
 
         });
+
         profile.setOnAction(actionEvent -> {
         networkOut.println("profile");
+        String text_profile;
             try {
-                System.out.println(networkIn.readLine());
+                list.getItems().clear();
+                text_profile = networkIn.readLine();
+                String[] parts = text_profile.split(",");
+                list.getItems().add("HP: "+parts[2]);
+                list.getItems().add("Attack: "+parts[3]);
+                list.getItems().add("Defence: "+parts[4]);
+                list.getItems().add("Rank: "+parts[5]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         bag.setOnAction(actionEvent -> {
+            String text_bag;
             networkOut.println("bag");
             try {
-                System.out.println(networkIn.readLine());
+                list.getItems().clear();
+                text_bag = networkIn.readLine();
+                String[] parts = text_bag.split(" ");
+                for( int i =0; i< parts.length; i++){
+                    list.getItems().add(parts[i]);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
