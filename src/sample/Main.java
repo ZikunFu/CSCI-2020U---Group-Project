@@ -50,6 +50,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage){
         //Thread for establishing server connection
+
         new Thread(()-> {
             while (true) {
                 System.out.println("connecting...");
@@ -68,6 +69,8 @@ public class Main extends Application {
                 }
 
             } }).start();
+
+
 
         //login
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -115,7 +118,7 @@ public class Main extends Application {
         canvas.heightProperty().bind(primaryStage.heightProperty());
 
         //root.getChildren().addAll(myGrid, canvas);
-        root.getChildren().addAll(myGrid);
+        root.getChildren().addAll(canvas, myGrid);
 
         primaryStage.setTitle("Graphics - Hello World");
         primaryStage.setScene(scene);
@@ -162,10 +165,10 @@ public class Main extends Application {
         Scene battle_scene = new Scene(vbox1,600,400);
 
 //        drawing graphics - shapes and image
-        //draw(root);
+        draw(root);
 
 //        draw an animation
-        //drawAnimation(root);
+        drawAnimation(root);
 
 
         //Login
@@ -220,8 +223,8 @@ public class Main extends Application {
         });
 
         profile.setOnAction(actionEvent -> {
-        networkOut.println("profile");
-        String text_profile;
+            networkOut.println("profile");
+            String text_profile;
             try {
                 list.getItems().clear();
                 text_profile = networkIn.readLine();
@@ -297,7 +300,7 @@ public class Main extends Application {
     private int frameIndex = 0;
 
 
-   private void drawAnimation(Group root) {
+    private void drawAnimation(Group root) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 //loading image sprite using relative path
         Image image = new Image(getClass().getClassLoader().getResource("images/bruce.jpg").toString());
