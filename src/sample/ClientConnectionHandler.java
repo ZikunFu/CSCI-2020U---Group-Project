@@ -108,7 +108,7 @@ public class ClientConnectionHandler extends Thread{
         username = argument.split(" ")[0];
         password = argument.split(" ")[1];
         if(command.equals("Login")){
-            System.out.println("Login received with argument<"+argument+">");
+            //System.out.println("THREAD: Login received with argument<"+argument+">");
             fileManager fm = new fileManager();
             boolean accountExist = false, passwordExist = false;
             accountExist = fm.matchCSV(userProfile,username,0);
@@ -128,7 +128,7 @@ public class ClientConnectionHandler extends Thread{
             }
         }
         else if(command.equals("Register")){
-            System.out.println("Register received with argument<"+argument+">");
+            //System.out.println("THREAD: Register received with argument<"+argument+">");
             fileManager fm = new fileManager();
             boolean accountExist = false;
             accountExist = fm.matchCSV(userProfile,username,0);
@@ -158,12 +158,12 @@ public class ClientConnectionHandler extends Thread{
         String temp[] = data.split(",");
 
         if(command.equals("profile")){
-            System.out.println("Profile received with argument<"+username+">");
+            //System.out.println("Profile received with argument<"+username+">");
             //hp, attack, defence, rank
             out.println(data);
         }
         else if(command.equals("bag")){
-            System.out.println("bag received with argument<"+username+">");
+            //System.out.println("bag received with argument<"+username+">");
             //item
             String bag = temp[6];
             out.println(bag);
@@ -175,7 +175,7 @@ public class ClientConnectionHandler extends Thread{
      * it alerts the server to initiate battle
      */
     protected void battle(){
-        System.out.println("Battle received with username <"+currentPlayer.username+">");
+        System.out.println("THREAD: Battle received with username <"+currentPlayer.username+">");
         ready = true;
     }
 

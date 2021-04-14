@@ -97,6 +97,7 @@ public class fileManager {
                 targetLine = nextLine;
             }
         }
+        br.close();
         return targetLine;
     }
 }
