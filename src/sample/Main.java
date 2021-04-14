@@ -83,9 +83,9 @@ public class Main extends Application {
         primaryStage.setTitle("Game");
 
         GridPane myGrid = new GridPane();
-        myGrid.setAlignment(Pos.CENTER);
-        myGrid.setHgap(10);
-        myGrid.setVgap(10);
+        myGrid.setAlignment(Pos.CENTER_LEFT);
+        myGrid.setHgap(47);
+        myGrid.setVgap(48);
         myGrid.setPadding(new Insets(25, 25, 25, 25));
         myGrid.setStyle("-fx-background-color: BEIGE;");
 
@@ -118,10 +118,12 @@ public class Main extends Application {
         Group root = new Group();
         Scene scene = new Scene(root, 780, 450);
 
+
         //Create Canvas object and add it into the scene
         canvas = new Canvas();
         canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.heightProperty().bind(primaryStage.heightProperty());
+
 
         //root.getChildren().addAll(myGrid, canvas);
         root.getChildren().addAll(canvas, myGrid);
@@ -138,7 +140,13 @@ public class Main extends Application {
         Button battle = new Button("battle");
         list = new ListView<>();
         VBox vbox = new VBox();
+        vbox.setPrefWidth(400);
+        vbox.setSpacing(50);
+        profile.setMaxWidth(vbox.getPrefWidth());
+        bag.setMaxWidth(vbox.getPrefWidth());
+        battle.setMaxWidth(vbox.getPrefWidth());
         vbox.getChildren().addAll(profile,bag,battle);
+        vbox.setAlignment(Pos.CENTER_RIGHT);
         border1.setLeft(vbox);
         border1.setRight(list);
         Scene main_scene = new Scene(border1,600,400);
@@ -161,13 +169,15 @@ public class Main extends Application {
         Button back = new Button("back");
 
         //Creating Battle Scene
-
         TextArea textArea = new TextArea();
-
         VBox vbox1 = new VBox();
         vbox1.setStyle("-fx-background-color: BEIGE;");
         vbox1.getChildren().addAll(textArea,back);
-
+        vbox1.setAlignment(Pos.BOTTOM_CENTER);
+        vbox1.setSpacing(80);
+        vbox1.setPrefHeight(40);
+        back.setMaxHeight(vbox1.getMaxHeight());
+        back.setMinSize(110,110);
         Scene battle_scene = new Scene(vbox1,600,400);
 
 //        drawing graphics - shapes and image
