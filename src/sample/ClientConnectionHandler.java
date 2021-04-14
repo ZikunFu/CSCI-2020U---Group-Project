@@ -35,8 +35,16 @@ public class ClientConnectionHandler extends Thread{
         while (!threadEnd) {
             String input = null, command, argument;
             input = listen();
-            command = input.split(" ", 2)[0];
-            argument = input.split(" ", 2)[1];
+
+            //check for single line command
+            if(input.split(" ").length!=1){
+                command = input.split(" ", 2)[0];
+                argument = input.split(" ", 2)[1];
+            }
+            else{
+                command= input.split(" ", 2)[0];
+                argument = null;
+            }
             if(input!=null){
                 try { threadEnd = serverAction(command, argument); }
                 catch (IOException e) { e.printStackTrace(); }
@@ -81,7 +89,7 @@ public class ClientConnectionHandler extends Thread{
             getProfile(command,argument);
         }
         else if(command.equals("battle")){
-            battle(argument);
+            battle();
         }
         return false;
     }
@@ -106,6 +114,10 @@ public class ClientConnectionHandler extends Thread{
             passwordExist = fm.matchCSV(userProfile,password,1);
             if(accountExist&&passwordExist){
                 out.println("correct");
+                //Record user profile
+                String data = fm.searchCSV(userProfile,username,0);
+                String temp[] = data.split(" ");
+                currentPlayer = new Player(temp[0],temp[1],Integer.parseInt(temp[2]),Integer.parseInt(temp[3]),Integer.parseInt(temp[4]),Integer.parseInt(temp[5]),temp[6].split(" "));
             }
             else if(!accountExist){
                 out.println("invalidAccount");
@@ -158,17 +170,11 @@ public class ClientConnectionHandler extends Thread{
 
     /**
      * This method is used to realize the battle command
-     * it can alert the server to initiate battle and
-     * create the class Player based on the current user profile
-     * @throws IOException
+     * it alerts the server to initiate battle
      */
-    protected void battle(String username) throws IOException {
-        System.out.println("Battle received with username<"+username+">");
+    protected void battle(){
+        System.out.println("Battle received with username <"+currentPlayer.username+">");
         ready = true;
-        fileManager fm = new fileManager();
-        String data = fm.searchCSV(userProfile,username,0);
-        String temp[] = data.split(" ");
-        currentPlayer = new Player(temp[0],temp[1],Integer.parseInt(temp[2]),Integer.parseInt(temp[3]),Integer.parseInt(temp[4]),Integer.parseInt(temp[5]),temp[6].split(" "));
     }
 
     //getter and setter for player profile and battle indicators
