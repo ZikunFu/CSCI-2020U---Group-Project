@@ -104,8 +104,8 @@ public class Main extends Application {
         canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.heightProperty().bind(primaryStage.heightProperty());
 
-        root.getChildren().addAll(myGrid, canvas);
-
+        //root.getChildren().addAll(myGrid, canvas);
+        root.getChildren().addAll(myGrid);
 
         primaryStage.setTitle("Graphics - Hello World");
         primaryStage.setScene(scene);
@@ -115,9 +115,9 @@ public class Main extends Application {
 
         //Creating mainScene
         BorderPane border1 = new BorderPane();
-        Button profile = new Button("Profile");
-        Button bag = new Button("Bag");
-        Button battle = new Button("Battle");
+        Button profile = new Button("profile");
+        Button bag = new Button("bag");
+        Button battle = new Button("battle");
         list = new ListView<>();
         VBox vbox = new VBox();
         vbox.getChildren().addAll(profile,bag,battle);
@@ -127,11 +127,14 @@ public class Main extends Application {
         //
         BorderPane border2 = new BorderPane();
         Scene prebattle_scene = new Scene(border2,600,400);
+        border2.setLeft(list);
+        border2.setRight(list);
+        Button back = new Button("back")
 
 
 
 //        drawing graphics - shapes and image
-        draw(root);
+        //draw(root);
 
 //        draw an animation
         //drawAnimation(root);
@@ -189,7 +192,7 @@ public class Main extends Application {
 
         });
         profile.setOnAction(actionEvent -> {
-        networkOut.println("Profile");
+        networkOut.println("profile");
             try {
                 System.out.println(networkIn.readLine());
             } catch (IOException e) {
@@ -197,7 +200,7 @@ public class Main extends Application {
             }
         });
         bag.setOnAction(actionEvent -> {
-            networkOut.println("Bag");
+            networkOut.println("bag");
             try {
                 System.out.println(networkIn.readLine());
             } catch (IOException e) {
@@ -205,7 +208,7 @@ public class Main extends Application {
             }
         });
         battle.setOnAction(actionEvent -> {
-            networkOut.println("Battle");
+            networkOut.println("battle");
             primaryStage.setScene(prebattle_scene);
         });
 
