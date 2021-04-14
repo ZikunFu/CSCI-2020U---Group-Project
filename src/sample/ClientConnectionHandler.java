@@ -2,6 +2,7 @@ package sample;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 
 /**
  * this class is a single thread for a given user
@@ -86,7 +87,7 @@ public class ClientConnectionHandler extends Thread{
             userLogin(command,argument);
         }
         else if(command.equals("profile")||command.equals("bag")){
-            getProfile(command,argument);
+            getProfile(command);
         }
         else if(command.equals("battle")){
             battle();
@@ -116,7 +117,7 @@ public class ClientConnectionHandler extends Thread{
                 out.println("correct");
                 //Record user profile
                 String data = fm.searchCSV(userProfile,username,0);
-                String temp[] = data.split(" ");
+                String temp[] = data.split(",");
                 currentPlayer = new Player(temp[0],temp[1],Integer.parseInt(temp[2]),Integer.parseInt(temp[3]),Integer.parseInt(temp[4]),Integer.parseInt(temp[5]),temp[6].split(" "));
             }
             else if(!accountExist){
@@ -146,22 +147,23 @@ public class ClientConnectionHandler extends Thread{
      * This method is used to realize the profile\bag command
      * it can send the user's profile to the client
      * @param command the command in message
-     * @param argument the argument in message
      * @throws IOException
      */
-    protected void getProfile(String command, String argument) throws IOException {
+    protected void getProfile(String command) throws IOException {
         fileManager fm = new fileManager();
-        String username = argument;
+        String username = currentPlayer.username;
         String data = fm.searchCSV(userProfile,username,0);
-        String temp[] = data.split(" ");
+        System.out.println("accessing profile: ");
+        System.out.println("data: "+data);
+        String temp[] = data.split(",");
+
         if(command.equals("profile")){
-            System.out.println("Profile received with argument<"+argument+">");
+            System.out.println("Profile received with argument<"+username+">");
             //hp, attack, defence, rank
-            String profile = temp[2]+" "+temp[3]+" "+temp[4]+" "+temp[5];
-            out.println(profile);
+            out.println(data);
         }
         else if(command.equals("bag")){
-            System.out.println("bag received with argument<"+argument+">");
+            System.out.println("bag received with argument<"+username+">");
             //item
             String bag = temp[6];
             out.println(bag);

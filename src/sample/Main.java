@@ -104,8 +104,8 @@ public class Main extends Application {
         canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.heightProperty().bind(primaryStage.heightProperty());
 
-        root.getChildren().addAll(myGrid, canvas);
-
+        //root.getChildren().addAll(myGrid, canvas);
+        root.getChildren().addAll(myGrid);
 
         primaryStage.setTitle("Graphics - Hello World");
         primaryStage.setScene(scene);
@@ -131,7 +131,7 @@ public class Main extends Application {
 
 
 //        drawing graphics - shapes and image
-        draw(root);
+        //draw(root);
 
 //        draw an animation
         //drawAnimation(root);
@@ -189,7 +189,7 @@ public class Main extends Application {
 
         });
         profile.setOnAction(actionEvent -> {
-        networkOut.println("Profile");
+        networkOut.println("profile");
             try {
                 System.out.println(networkIn.readLine());
             } catch (IOException e) {
@@ -197,7 +197,7 @@ public class Main extends Application {
             }
         });
         bag.setOnAction(actionEvent -> {
-            networkOut.println("Bag");
+            networkOut.println("bag");
             try {
                 System.out.println(networkIn.readLine());
             } catch (IOException e) {
@@ -205,7 +205,7 @@ public class Main extends Application {
             }
         });
         battle.setOnAction(actionEvent -> {
-            networkOut.println("Battle");
+            networkOut.println("battle");
             primaryStage.setScene(prebattle_scene);
         });
 
