@@ -78,6 +78,7 @@ public class Main extends Application {
         myGrid.setHgap(10);
         myGrid.setVgap(10);
         myGrid.setPadding(new Insets(25, 25, 25, 25));
+        myGrid.setStyle("-fx-background-color: BEIGE;");
 
         Label lb1 = new Label("Account:");
         TextField tf1 = new TextField();
@@ -122,6 +123,7 @@ public class Main extends Application {
 
         //Creating mainScene
         BorderPane border1 = new BorderPane();
+        border1.setStyle("-fx-background-color: BEIGE;");
         Button profile = new Button("profile");
         Button bag = new Button("bag");
         Button battle = new Button("battle");
@@ -143,8 +145,10 @@ public class Main extends Application {
 
         //creating pre-battle Scene
         BorderPane border2 = new BorderPane();
+        border2.setStyle("-fx-background-color: BEIGE;");
         Label label1 = new Label("Waiting for the opponent");
-        Scene prebattle_scene = new Scene(label1,600,400);
+        border2.setCenter(label1);
+        Scene prebattle_scene = new Scene(border2,600,400);
         Button back = new Button("back");
 
         //Creating Battle Scene
@@ -152,6 +156,7 @@ public class Main extends Application {
         TextArea textArea = new TextArea();
 
         VBox vbox1 = new VBox();
+        vbox1.setStyle("-fx-background-color: BEIGE;");
         vbox1.getChildren().addAll(textArea,back);
 
         Scene battle_scene = new Scene(vbox1,600,400);
