@@ -24,6 +24,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.util.Duration;
 import javafx.scene.control.Label;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -124,12 +125,18 @@ public class Main extends Application {
         border1.setLeft(vbox);
         border1.setRight(list);
         Scene main_scene = new Scene(border1,600,400);
-        //
+        //creating pre-battle Scene
         BorderPane border2 = new BorderPane();
         Scene prebattle_scene = new Scene(border2,600,400);
-        border2.setLeft(list);
-        border2.setRight(list);
+        ListView<String> list1 = new ListView<>();
+        ListView<String> list2 = new ListView<>();
+        border2.setLeft(list1);
+        border2.setRight(list2);
         Button back = new Button("back");
+        border2.setCenter(back);
+        //Creating Battle Scene
+        TextArea textArea = new TextArea();
+
 
 
 
@@ -211,6 +218,9 @@ public class Main extends Application {
         battle.setOnAction(actionEvent -> {
             networkOut.println("battle");
             primaryStage.setScene(prebattle_scene);
+        });
+        back.setOnAction(actionEvent ->{
+            primaryStage.setScene(main_scene);
         });
 
     }
