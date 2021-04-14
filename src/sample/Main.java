@@ -129,7 +129,8 @@ public class Main extends Application {
         Scene prebattle_scene = new Scene(border2,600,400);
         border2.setLeft(list);
         border2.setRight(list);
-        Button back = new Button("back")
+        Button back = new Button("back");
+
 
 
 
