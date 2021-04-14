@@ -57,6 +57,17 @@ public class Server {
             Thread.sleep(3000);
         }
     }
+
+    /**
+     * this method is the simulator as the battle going on
+     * this is the battle history that will paste to the textarea that after clicking battle
+     * when the battle is going, we set each item can deal how much damage
+     * the rule for attacking with item, should rolling dice
+     * if the point is over 70, then the player is allowed to use the item.
+     * at last, it will declare the winner
+     * @param p1 player1 connecting to sever
+     * @param p2 player2 connecting to sever
+     */
     public void battle(ClientConnectionHandler p1, ClientConnectionHandler p2){
         System.out.println("SERVER: Battle!");
         String log = "";

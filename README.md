@@ -2,6 +2,7 @@ a. Project information: \
 CSCI2020U Group Project\
 Member: Zikun Fu (100742730)\
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Chen Yang (100742300)\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yanguang Yang(100738182)
 \
 Screenshots of running application:\
 ![alt text](https://github.com/ZikunFu/CSCI2020U_GroupProject/blob/master/src/sample/resources/App_screenshot_1.png)

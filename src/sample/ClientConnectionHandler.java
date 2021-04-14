@@ -179,10 +179,19 @@ public class ClientConnectionHandler extends Thread{
         ready = true;
     }
 
+    /**
+     * this method is transferring the message
+     * @param msg
+     */
     public void outPut(String msg){
         out.println(msg);
     }
     //getter and setter for player profile and battle indicators
+
+    /**
+     * this method is used to confirm if two players is ready to fight
+     * @return boolean true
+     */
     public boolean isReady(){
         return ready;
     }

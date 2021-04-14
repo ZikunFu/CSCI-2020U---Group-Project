@@ -34,7 +34,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-
+/**
+ * this is about UI setting and set the functions for the game
+ * we added a thread for kepp asking the server to get connected
+ * and then make the login scene
+ * then make a menu Scene for the game
+ * at last there is a textarea for battle
+ */
 public class Main extends Application {
     private Canvas canvas;
     //private double screenWidth = 100;
@@ -72,7 +78,7 @@ public class Main extends Application {
 
 
 
-        //login
+        //login scene
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Game");
 
@@ -112,7 +118,7 @@ public class Main extends Application {
         Group root = new Group();
         Scene scene = new Scene(root, 780, 450);
 
-        //        Create Canvas object and add it into the scene
+        //Create Canvas object and add it into the scene
         canvas = new Canvas();
         canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.heightProperty().bind(primaryStage.heightProperty());
@@ -120,7 +126,7 @@ public class Main extends Application {
         //root.getChildren().addAll(myGrid, canvas);
         root.getChildren().addAll(canvas, myGrid);
 
-        primaryStage.setTitle("Graphics - Hello World");
+        primaryStage.setTitle("Game");
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -299,11 +305,15 @@ public class Main extends Application {
     private int sourceWidthOffset = 0;
     private int frameIndex = 0;
 
-
+    /**
+     * this method is used for the animation
+     * add timeline for change the png by frame
+     * @param root the stream of the png
+     */
     private void drawAnimation(Group root) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 //loading image sprite using relative path
-        Image image = new Image(getClass().getClassLoader().getResource("images/bruce.jpg").toString());
+        Image image = new Image(getClass().getClassLoader().getResource("sample/resources/images/bruce.jpg").toString());
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -328,6 +338,9 @@ public class Main extends Application {
         timeline.playFromStart();
     }
 
+    /**
+     * this is used for drawing the logo of the game     * @param root the draw
+     */
     private void draw(Group root) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
