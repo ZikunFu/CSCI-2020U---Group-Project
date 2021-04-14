@@ -5,11 +5,9 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -19,7 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.canvas.Canvas;
 import javafx.util.Duration;
@@ -39,7 +36,6 @@ public class Main extends Application {
     //private double screenHeight = 600;
 
     private Socket socket = null;
-    private BufferedReader in = null;
     private PrintWriter networkOut = null;
     private BufferedReader networkIn = null;
 
@@ -47,10 +43,11 @@ public class Main extends Application {
     public  static String SERVER_ADDRESS = "localhost";
     public  static int    SERVER_PORT = 16789;
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage){
         //Thread for establishing server connection
         new Thread(()-> {
             while (true) {
+                System.out.println("connecting...");
                 try {
                     socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
                     if (socket != null) {
@@ -58,11 +55,11 @@ public class Main extends Application {
                         networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         break;
                     }
-                    System.out.println("trying to connect...");
+
                 } catch (UnknownHostException e) {
                     System.err.println("Unknown host: "+SERVER_ADDRESS);
                 } catch (IOException e) {
-                    System.err.println("IOEXception while connecting to server: "+SERVER_ADDRESS);
+                    System.err.println("IOException while connecting to "+SERVER_ADDRESS);
                 }
 
             } }).start();
@@ -104,7 +101,9 @@ public class Main extends Application {
         canvas = new Canvas();
         canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.heightProperty().bind(primaryStage.heightProperty());
+
         root.getChildren().addAll(myGrid, canvas);
+
 
         primaryStage.setTitle("Graphics - Hello World");
         primaryStage.setScene(scene);
@@ -114,7 +113,7 @@ public class Main extends Application {
         draw(root);
 
 //        draw an animation
-        drawAnimation(root);
+        //drawAnimation(root);
 
 
         //Login
@@ -129,7 +128,10 @@ public class Main extends Application {
                 System.err.println("Error reading response to login.");
             }
 
-            if(message.equals("correct")){
+            if(message==null){
+                System.err.println("Error, message is null");
+            }
+            else if(message.equals("correct")){
                 label.setText("Login Successfully");
             }
             else if(message.equals("invalidAccount")){
@@ -152,7 +154,10 @@ public class Main extends Application {
                 System.err.println("Error reading response to Register.");
             }
 
-            if(message.equals("invalidAccount")){
+            if(message==null){
+                System.err.println("Error, message is null");
+            }
+            else if(message.equals("invalidAccount")){
                 label.setText("Invalid Account");
             }
             else if(message.equals("correct")){
@@ -162,9 +167,9 @@ public class Main extends Application {
         });
     }
 
-    private int frameWidth = 480;
-    private int frameHeight = 310;
-    private int numFrames = 3;
+    final private int frameWidth = 480;
+    final private int frameHeight = 310;
+    final private int numFrames = 3;
     private int sourceHeightOffset = 0;
     private int sourceWidthOffset = 0;
     private int frameIndex = 0;
