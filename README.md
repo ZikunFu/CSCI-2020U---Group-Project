@@ -22,13 +22,12 @@ c. How to run: \
 &nbsp;&nbsp;&nbsp;&nbsp;2.Include javafx-sdk-15.0.1 as library.\
 &nbsp;&nbsp;&nbsp;&nbsp;3.Note: Launching from IDE need to add VM arguments:\
 &nbsp;&nbsp;&nbsp;&nbsp;"--module-path /path/to/javafx-sdk-11.0.2/lib --add-modules javafx.controls,javafx.fxml"\
-&nbsp;&nbsp;&nbsp;&nbsp;4.Set command line arguments for Main.java(default: "127.0.0.1 local_shared/")\
 &nbsp;&nbsp;&nbsp;&nbsp;Note: default port is 16789, MaxThread is 2, \
 &nbsp;&nbsp;&nbsp;&nbsp; default SERVER_PATH is "server_shared" this is where "userProfile.csv" is saved\
-&nbsp;&nbsp;&nbsp;&nbsp;5.IMPORTANT: Only two clients are allowed to connect since this is a two-player-versus game\
-&nbsp;&nbsp;&nbsp;&nbsp;6.Launch two instances of Main.java.\
-&nbsp;&nbsp;&nbsp;&nbsp;7.Launch Server.java.\
-&nbsp;&nbsp;&nbsp;&nbsp;8.Testing username and pass word can be found inside userProfile.csv
+&nbsp;&nbsp;&nbsp;&nbsp;4.IMPORTANT: Only two clients are allowed to connect since this is a two-player-versus game\
+&nbsp;&nbsp;&nbsp;&nbsp;5.Launch two instances of Main.java.\
+&nbsp;&nbsp;&nbsp;&nbsp;6.Launch Server.java.\
+&nbsp;&nbsp;&nbsp;&nbsp;7.Testing username and pass word can be found inside userProfile.csv
 
 d. How to play: \
 &nbsp;&nbsp;&nbsp;&nbsp;1.Register an account\
