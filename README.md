@@ -12,9 +12,9 @@ b. Features: \
 &nbsp;&nbsp;&nbsp;&nbsp;1.TextArea, Label, and Textfield are implemented for user login and registration.\
 &nbsp;&nbsp;&nbsp;&nbsp;2.ListView, Buttons are implemented to represent player profile and items.\
 &nbsp;&nbsp;&nbsp;&nbsp;3.Button Icons, 2D Graphics, and Animations are added for beautiful aesthetic.\
-&nbsp;&nbsp;&nbsp;&nbsp;4.Alerts for confirmation and incorrect user input.
+&nbsp;&nbsp;&nbsp;&nbsp;4.Alerts for confirmation and incorrect user input.\
 &nbsp;&nbsp;&nbsp;&nbsp;5.Support multi-clients using multi-threading and sockets (client/server) architecture.\
-&nbsp;&nbsp;&nbsp;&nbsp;6.Four scenes are implemented in the client application\
+&nbsp;&nbsp;&nbsp;&nbsp;6.Four scenes are implemented in the client application
 
 
 c. How to run: \
@@ -28,7 +28,7 @@ c. How to run: \
 &nbsp;&nbsp;&nbsp;&nbsp;5.IMPORTANT: Only two clients are allowed to connect since this is a two-player-versus game\
 &nbsp;&nbsp;&nbsp;&nbsp;6.Launch two instances of Main.java.\
 &nbsp;&nbsp;&nbsp;&nbsp;7.Launch Server.java.\
-&nbsp;&nbsp;&nbsp;&nbsp;8.Testing username and pass word can be found inside userProfile.csv\
+&nbsp;&nbsp;&nbsp;&nbsp;8.Testing username and pass word can be found inside userProfile.csv
 
 d. How to play: \
 &nbsp;&nbsp;&nbsp;&nbsp;1.Register an account\
@@ -37,9 +37,9 @@ d. How to play: \
 &nbsp;&nbsp;&nbsp;&nbsp;4.The game is an auto battler between two players\
 &nbsp;&nbsp;&nbsp;&nbsp;5.Both players should ready by clicking "battle" to initiate the battle\
 &nbsp;&nbsp;&nbsp;&nbsp;6.During battle, you will roll a die before attacking which determine if an item is used\
-&nbsp;&nbsp;&nbsp;&nbsp;7.When battle is completed you will be awarded with ranks and items if you won\
-&nbsp;&nbsp;&nbsp;&nbsp;8.Rank affects attack and defence\
+&nbsp;&nbsp;&nbsp;&nbsp;7.When battle is completed you will be awarded with ranks if you won\
+&nbsp;&nbsp;&nbsp;&nbsp;8.Rank affects attack and defence
 
 e. Other resources: \
-&nbsp;&nbsp;&nbsp;&nbsp;1.ChatServer provided by professor Mariana Shimabukuro in canvas.\
+&nbsp;&nbsp;&nbsp;&nbsp;1.ChatServer provided by professor Mariana Shimabukuro in Canvas.\
 &nbsp;&nbsp;&nbsp;&nbsp;2.Button Icons from free opensource website "flaticon.com"
