@@ -5,13 +5,17 @@ Member: Zikun Fu (100742730)\
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yanguang Yang(100738182)
 \
 Screenshots of running application:\
-![alt text](https://github.com/ZikunFu/CSCI2020U_GroupProject/blob/master/src/sample/resources/App_screenshot_1.png)
+![alt text](https://github.com/ZikunFu/CSCI2020U_GroupProject/blob/master/src/sample/resources/images/App_screenshot_1.png)
+![alt text](https://github.com/ZikunFu/CSCI2020U_GroupProject/blob/master/src/sample/resources/images/App_screenshot_2.png)
 
-b. Improvements: \
-&nbsp;&nbsp;&nbsp;&nbsp;1.TextArea and View File function to display local stored files.\
-&nbsp;&nbsp;&nbsp;&nbsp;2.TreeView for browsing multiple sub-directories under root folder on Server shared folder.\
-&nbsp;&nbsp;&nbsp;&nbsp;3.Button Icons.\
-&nbsp;&nbsp;&nbsp;&nbsp;4.Alerts for information and incorrect user input.
+b. Features: \
+&nbsp;&nbsp;&nbsp;&nbsp;1.TextArea, Label, and Textfield are implemented for user login and registration.\
+&nbsp;&nbsp;&nbsp;&nbsp;2.ListView, Buttons are implemented to represent player profile and items.\
+&nbsp;&nbsp;&nbsp;&nbsp;3.Button Icons, 2D Graphics, and Animations are added for beautiful aesthetic.\
+&nbsp;&nbsp;&nbsp;&nbsp;4.Alerts for confirmation and incorrect user input.
+&nbsp;&nbsp;&nbsp;&nbsp;5.Support multi-clients using multi-threading and sockets (client/server) architecture.\
+&nbsp;&nbsp;&nbsp;&nbsp;6.Four scenes are implemented in the client application\
+
 
 c. How to run: \
 &nbsp;&nbsp;&nbsp;&nbsp;1.Install java jdk-14 or higher version.\

@@ -2,7 +2,6 @@ package sample;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
 
 /**
  * this class is a single thread for a given user
@@ -11,9 +10,9 @@ public class ClientConnectionHandler extends Thread{
     protected Socket clientSocket;//Socket
     protected BufferedReader in;  //networkInput
     protected PrintWriter out;    //networkOutput
-    protected File userProfile;
-    protected boolean ready;
-    protected Player currentPlayer;
+    protected File userProfile;   //Profile location
+    protected boolean ready;      //Ready marker
+    protected Player currentPlayer;//Player class to store profile
 
     //Constructor
     public ClientConnectionHandler(Socket socket, File userProfile) throws IOException {
@@ -29,7 +28,6 @@ public class ClientConnectionHandler extends Thread{
      * This method runs the thread
      * it uses listen() and serverAction()
      * to listen and respond to client messages
-     * @throws IOException
      */
     public void run() {
         boolean threadEnd = false;
@@ -108,7 +106,6 @@ public class ClientConnectionHandler extends Thread{
         username = argument.split(" ")[0];
         password = argument.split(" ")[1];
         if(command.equals("Login")){
-            //System.out.println("THREAD: Login received with argument<"+argument+">");
             fileManager fm = new fileManager();
             boolean accountExist = false, passwordExist = false;
             accountExist = fm.matchCSV(userProfile,username,0);
@@ -117,8 +114,10 @@ public class ClientConnectionHandler extends Thread{
                 out.println("correct");
                 //Record user profile
                 String data = fm.searchCSV(userProfile,username,0);
-                String temp[] = data.split(",");
-                currentPlayer = new Player(temp[0],temp[1],Integer.parseInt(temp[2]),Integer.parseInt(temp[3]),Integer.parseInt(temp[4]),Integer.parseInt(temp[5]),temp[6].split(" "));
+                String[] temp = data.split(",");
+                currentPlayer = new Player(temp[0],temp[1],Integer.parseInt(temp[2]),
+                        Integer.parseInt(temp[3]),Integer.parseInt(temp[4]),
+                        Integer.parseInt(temp[5]),temp[6].split(" "));
             }
             else if(!accountExist){
                 out.println("invalidAccount");
@@ -128,7 +127,6 @@ public class ClientConnectionHandler extends Thread{
             }
         }
         else if(command.equals("Register")){
-            //System.out.println("THREAD: Register received with argument<"+argument+">");
             fileManager fm = new fileManager();
             boolean accountExist = false;
             accountExist = fm.matchCSV(userProfile,username,0);
@@ -136,7 +134,8 @@ public class ClientConnectionHandler extends Thread{
                 out.println("invalidAccount");
             }
             else {
-                fm.appendCSV(userProfile,username + "," + password + ",50,10,2,1,potion bomb knife armor fireball");
+                fm.appendCSV(userProfile,username + "," + password
+                        + ",50,10,2,1,potion bomb knife armor fireball");
                 out.println("correct");
             }
         }
@@ -155,15 +154,14 @@ public class ClientConnectionHandler extends Thread{
         String data = fm.searchCSV(userProfile,username,0);
         System.out.println("accessing profile: ");
         System.out.println("data: "+data);
-        String temp[] = data.split(",");
+        String[] temp = data.split(",");
 
         if(command.equals("profile")){
-            //System.out.println("Profile received with argument<"+username+">");
             //hp, attack, defence, rank
-            out.println(data);
+            out.println(currentPlayer.hp+" "+ currentPlayer.attack+" "
+                    +currentPlayer.defence+" "+currentPlayer.rank);
         }
         else if(command.equals("bag")){
-            //System.out.println("bag received with argument<"+username+">");
             //item
             String bag = temp[6];
             out.println(bag);
@@ -175,19 +173,12 @@ public class ClientConnectionHandler extends Thread{
      * it alerts the server to initiate battle
      */
     protected void battle(){
-        System.out.println("THREAD: Battle received with username <"+currentPlayer.username+">");
+        System.out.println("THREAD: Battle received with username <"
+                +currentPlayer.username+">");
         ready = true;
     }
 
-    /**
-     * this method is transferring the message
-     * @param msg
-     */
-    public void outPut(String msg){
-        out.println(msg);
-    }
     //getter and setter for player profile and battle indicators
-
     /**
      * this method is used to confirm if two players is ready to fight
      * @return boolean true

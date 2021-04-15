@@ -76,7 +76,7 @@ public class Server {
 
         p1.out.println("start");
         p2.out.println("start");
-
+        //50% probability for first move
         int randomNum = ThreadLocalRandom.current().nextInt(0, 2);
         if(randomNum==0){
             player1 = p1.getPlayer();
@@ -90,8 +90,9 @@ public class Server {
         }
         log +="Battle started between "+player1.username+" and "+player2.username+"#";
 
-        boolean isOver = false, p1Victory=false;
+        boolean isOver = false, p1Victory = false;
 
+        //Round loop
         int round=0;
         int p1_hp=player1.hp;
         int p2_hp=player2.hp;
@@ -102,8 +103,8 @@ public class Server {
             log +="Player<"+player2.username+">hp:"+p2_hp+"#";
 
             //Calculate damage
-            int damageByP1 = player1.getAttack()-player2.getDefence();
-            int damageByP2 = player1.getAttack()-player2.getDefence();
+            int damageByP1 = player1.getAttack()*player1.rank-player2.getDefence()*player2.rank;
+            int damageByP2 = player2.getAttack()*player2.rank-player1.getDefence()*player1.rank;
 
             //item Phase
             int itemNum = ThreadLocalRandom.current().nextInt(0, 4);
@@ -181,7 +182,7 @@ public class Server {
                 isOver = true;
             }
             round++;
-            System.out.println("");
+            log += "#";
         }
         if(p1Victory){
             log +=player1.username+" victory!#";

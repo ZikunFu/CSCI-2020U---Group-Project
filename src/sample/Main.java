@@ -8,24 +8,20 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
 import javafx.scene.canvas.Canvas;
 import javafx.util.Duration;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,16 +32,14 @@ import java.net.UnknownHostException;
 
 /**
  * this is about UI setting and set the functions for the game
- * we added a thread for kepp asking the server to get connected
+ * we added a thread for continuously asking the server to get connected
  * and then make the login scene
  * then make a menu Scene for the game
  * at last there is a textarea for battle
  */
 public class Main extends Application {
     private Canvas canvas;
-    //private double screenWidth = 100;
-    //private double screenHeight = 600;
-
+    private Canvas canvas2;
     private Socket socket = null;
     private PrintWriter networkOut = null;
     private BufferedReader networkIn = null;
@@ -55,8 +49,20 @@ public class Main extends Application {
     public  static int    SERVER_PORT = 16789;
     @Override
     public void start(Stage primaryStage){
-        //Thread for establishing server connection
+        //Loading Resources
+        Image img1 = new Image("sample/resources/images/login.png",20,20,true,true);
+        Image img2 = new Image("sample/resources/images/register.png",20,20,true,true);
+        Image img3 = new Image("sample/resources/images/profile.png",20,20,true,true);
+        Image img4 = new Image("sample/resources/images/bag.png",20,20,true,true);
+        Image img5 = new Image("sample/resources/images/battle.png",20,20,true,true);
 
+        ImageView view1 = new ImageView(img1);
+        ImageView view2 = new ImageView(img2);
+        ImageView view3 = new ImageView(img3);
+        ImageView view4 = new ImageView(img4);
+        ImageView view5 = new ImageView(img5);
+
+        //Thread for establishing server connection
         new Thread(()-> {
             while (true) {
                 System.out.println("connecting...");
@@ -67,72 +73,48 @@ public class Main extends Application {
                         networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         break;
                     }
-
                 } catch (UnknownHostException e) {
                     System.err.println("Unknown host: "+SERVER_ADDRESS);
                 } catch (IOException e) {
                     System.err.println("IOException while connecting to "+SERVER_ADDRESS);
                 }
-
             } }).start();
 
+        primaryStage.setTitle("CRAZY FIGHT");
 
-
-        //login scene
-        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Game");
-
+        //Login Scene UI Elements
+        Label lb1 = new Label("Account:");
+        TextField tf1 = new TextField();
+        Label lb2 = new Label("Password:");
+        PasswordField tf2 = new PasswordField();
+        Button login = new Button("Login");
+        Button register = new Button("Register");
+        login.setGraphic(view1);
+        canvas = new Canvas();
+        canvas.setHeight(150);
+        canvas.setWidth(500);
+        canvas2 = new Canvas();
+        register.setGraphic(view2);
         GridPane myGrid = new GridPane();
         myGrid.setAlignment(Pos.CENTER_LEFT);
         myGrid.setHgap(47);
         myGrid.setVgap(48);
         myGrid.setPadding(new Insets(25, 25, 25, 25));
         myGrid.setStyle("-fx-background-color: BEIGE;");
-
-        Label lb1 = new Label("Account:");
-        TextField tf1 = new TextField();
-        Label lb2 = new Label("Password:");
-        TextField tf2 = new TextField();
-
-        myGrid.add(lb1, 0,2);
-        myGrid.add(tf1, 1,2);
-        myGrid.add(lb2, 0,3);
-        myGrid.add(tf2, 1,3);
-
-        final Label label = new Label();
-
-        Button login = new Button("Login");
-        myGrid.add(login, 1, 4);
-        Button register = new Button("Register");
-        myGrid.add(register, 1, 5);
-        //adding image for login and register
-        Image img1 = new Image("sample/resources/images/login.png",20,20,true,true);
-        Image img2 = new Image("sample/resources/images/register.png",20,20,true,true);
-        ImageView view1 = new ImageView(img1);
-        ImageView view2 = new ImageView(img2);
-        login.setGraphic(view1);
-        register.setGraphic(view2);
-        myGrid.add(label, 1, 6);
-
-        //LOGO
-        Group root = new Group();
-        Scene scene = new Scene(root, 780, 450);
-
-
-        //Create Canvas object and add it into the scene
-        canvas = new Canvas();
-        canvas.widthProperty().bind(primaryStage.widthProperty());
-        canvas.heightProperty().bind(primaryStage.heightProperty());
-
-
-        //root.getChildren().addAll(myGrid, canvas);
-        root.getChildren().addAll(canvas, myGrid);
-
-        primaryStage.setTitle("Game");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        //Creating mainScene
+        Pane pane = new Pane();
+        pane.setStyle("-fx-background-color: BEIGE;");
+        pane.getChildren().addAll(canvas);
+        BorderPane b1 = new BorderPane();
+        b1.setTop(pane);
+        b1.setCenter(myGrid);
+        Scene scene = new Scene(b1, 600, 450);
+        BorderPane.setAlignment(pane,Pos.TOP_LEFT);
+        myGrid.add(lb1, 0,0,1,1);
+        myGrid.add(tf1, 1,0,1,1);
+        myGrid.add(lb2, 0,1,1,1);
+        myGrid.add(tf2, 1,1,1,1);
+        myGrid.add(login, 0,2,1,1);
+        myGrid.add(register, 1,2,1,1);
         BorderPane border1 = new BorderPane();
         border1.setStyle("-fx-background-color: BEIGE;");
         Button profile = new Button("profile");
@@ -150,25 +132,26 @@ public class Main extends Application {
         border1.setLeft(vbox);
         border1.setRight(list);
         Scene main_scene = new Scene(border1,600,400);
-        Image img3 = new Image("sample/resources/images/profile.png",20,20,true,true);
-        Image img4 = new Image("sample/resources/images/bag.png",20,20,true,true);
-        Image img5 = new Image("sample/resources/images/battle.png",20,20,true,true);
-        ImageView view3 = new ImageView(img3);
-        ImageView view4 = new ImageView(img4);
-        ImageView view5 = new ImageView(img5);
         profile.setGraphic(view3);
         bag.setGraphic(view4);
         battle.setGraphic(view5);
 
-        //creating pre-battle Scene
+        //pre-battle Scene UI Elements
         BorderPane border2 = new BorderPane();
         border2.setStyle("-fx-background-color: BEIGE;");
         Label label1 = new Label("Waiting for the opponent");
-        border2.setCenter(label1);
-        Scene prebattle_scene = new Scene(border2,600,400);
+        label1.setScaleX(2);
+        label1.setScaleY(2);
+        border2.setTop(label1);
+        canvas2.setWidth(800);
+        canvas2.setHeight(500);
+        Pane pane2 = new Pane(canvas2);
+        border2.setCenter(pane2);
+        BorderPane.setAlignment(label1,Pos.CENTER);
+        Scene prebattle_scene = new Scene(border2,800,600);
         Button back = new Button("back");
 
-        //Creating Battle Scene
+        //Battle Scene UI Elements
         TextArea textArea = new TextArea();
         VBox vbox1 = new VBox();
         vbox1.setStyle("-fx-background-color: BEIGE;");
@@ -180,41 +163,46 @@ public class Main extends Application {
         back.setMinSize(110,110);
         Scene battle_scene = new Scene(vbox1,600,400);
 
-//        drawing graphics - shapes and image
-        draw(root);
+//      drawing LOGO
+        draw();
+//      drawing animation
+        drawAnimation();
 
-//        draw an animation
-        drawAnimation(root);
-
-
-        //Login
+        //Button Actions
         login.setOnAction(actionEvent -> {
-
             String message = null;
-
             networkOut.println("Login " + tf1.getText() + " " + tf2.getText());
-            try {
-                message = networkIn.readLine();
-            } catch (IOException e) {
+            try { message = networkIn.readLine(); }
+            catch (IOException e) {
                 System.err.println("Error reading response to login.");
             }
-
             if(message==null){
                 System.err.println("Error, message is null");
             }
             else if(message.equals("correct")){
-                label.setText("Login Successfully");
+                Alert a = new Alert(Alert.AlertType.NONE);
+                a.setAlertType(Alert.AlertType.CONFIRMATION);
+                a.setTitle("Login");
+                a.setContentText("Login Successfully");
+                a.show();
                 primaryStage.setScene(main_scene);
+                primaryStage.setTitle("CRAZY FIGHT - Menu");
             }
             else if(message.equals("invalidAccount")){
-                label.setText("Invalid Account");
+                Alert a = new Alert(Alert.AlertType.NONE);
+                a.setAlertType(Alert.AlertType.ERROR);
+                a.setTitle("Login");
+                a.setContentText("Account does not exist");
+                a.show();
             }
             else if(message.equals("invalidPassword")){
-                label.setText("Invalid Password");
+                Alert a = new Alert(Alert.AlertType.NONE);
+                a.setAlertType(Alert.AlertType.ERROR);
+                a.setTitle("Login");
+                a.setContentText("Password is incorrect");
+                a.show();
             }
         });
-
-        //Register
         register.setOnAction(actionEvent -> {
 
             String message = null;
@@ -230,25 +218,32 @@ public class Main extends Application {
                 System.err.println("Error, message is null");
             }
             else if(message.equals("invalidAccount")){
-                label.setText("Invalid Account");
+                Alert a = new Alert(Alert.AlertType.NONE);
+                a.setAlertType(Alert.AlertType.ERROR);
+                a.setTitle("Register");
+                a.setContentText("Account already exists");
+                a.show();
             }
             else if(message.equals("correct")){
-                label.setText("Register Successfully");
+                Alert a = new Alert(Alert.AlertType.NONE);
+                a.setAlertType(Alert.AlertType.CONFIRMATION);
+                a.setTitle("Login");
+                a.setContentText("Account registered");
+                a.show();
             }
 
         });
-
         profile.setOnAction(actionEvent -> {
             networkOut.println("profile");
             String text_profile;
             try {
                 list.getItems().clear();
                 text_profile = networkIn.readLine();
-                String[] parts = text_profile.split(",");
-                list.getItems().add("HP: "+parts[2]);
-                list.getItems().add("Attack: "+parts[3]);
-                list.getItems().add("Defence: "+parts[4]);
-                list.getItems().add("Rank: "+parts[5]);
+                String[] parts = text_profile.split(" ");
+                list.getItems().add("HP: "+parts[0]);
+                list.getItems().add("Attack: "+parts[1]);
+                list.getItems().add("Defence: "+parts[2]);
+                list.getItems().add("Rank: "+parts[3]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -270,6 +265,7 @@ public class Main extends Application {
         battle.setOnAction(actionEvent -> {
             networkOut.println("battle");
             primaryStage.setScene(prebattle_scene);
+            primaryStage.setTitle("CRAZY FIGHT - Pre-battle");
             new Thread(()-> {
                 while (true){
                     try {
@@ -280,6 +276,7 @@ public class Main extends Application {
                                     @Override
                                     public void run() {
                                         primaryStage.setScene(battle_scene);
+                                        primaryStage.setTitle("CRAZY FIGHT - Battle");
                                         try {
                                             String battle_lines;
                                             battle_lines = networkIn.readLine();
@@ -292,20 +289,18 @@ public class Main extends Application {
                                 });
                                 break;
                             }
-                            else {
-                                System.err.println("?????"+message);
-                            }
                         }
                     }
                     catch (IOException e) { e.printStackTrace(); }
                 }
-
             }).start();
         });
         back.setOnAction(actionEvent ->{
             primaryStage.setScene(main_scene);
         });
 
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     final private int frameWidth = 480;
@@ -318,10 +313,9 @@ public class Main extends Application {
     /**
      * this method is used for the animation
      * add timeline for change the png by frame
-     * @param root the stream of the png
      */
-    private void drawAnimation(Group root) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+    private void drawAnimation() {
+        GraphicsContext gc = canvas2.getGraphicsContext2D();
 //loading image sprite using relative path
         Image image = new Image(getClass().getClassLoader().getResource("sample/resources/images/bruce.jpg").toString());
 
@@ -349,9 +343,9 @@ public class Main extends Application {
     }
 
     /**
-     * this is used for drawing the logo of the game     * @param root the draw
+     * this is used for drawing the logo of the game
      */
-    private void draw(Group root) {
+    private void draw() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
 //        C
